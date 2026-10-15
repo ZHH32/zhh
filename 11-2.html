@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS3 3D 动画</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px 80px;
+      background: #111827;
+      color: #e5e7eb;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .zhang_subtitle {
+      text-align: center;
+      color: #9ca3af;
+      margin-bottom: 40px;
+    }
+
+    .zhang_card {
+      max-width: 860px;
+      margin: 0 auto 36px;
+      padding: 28px 32px;
+      border-radius: 16px;
+      background: #1f2937;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .zhang_card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      border-left: 4px solid #60a5fa;
+      padding-left: 12px;
+    }
+
+    .zhang_desc {
+      color: #d1d5db;
+      line-height: 1.8;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      background: #374151;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #7dd3fc;
+    }
+
+    .zhang_demo-area {
+      margin-top: 20px;
+      padding: 30px 20px;
+      border-radius: 12px;
+      background: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      min-height: 220px;
+    }
+
+    .zhang_perspective {
+      perspective: 600px;
+    }
+
+    .zhang_cube-scene {
+      width: 120px;
+      height: 120px;
+      perspective: 600px;
+    }
+
+    .zhang_cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: zhang_spin 6s linear infinite;
+    }
+
+    .zhang_cube-face {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+    }
+
+    .zhang_cube-front  { background: rgba(59, 130, 246, 0.85); transform: rotateY(0deg) translateZ(60px); }
+    .zhang_cube-back   { background: rgba(139, 92, 246, 0.85); transform: rotateY(180deg) translateZ(60px); }
+    .zhang_cube-right  { background: rgba(16, 185, 129, 0.85); transform: rotateY(90deg) translateZ(60px); }
+    .zhang_cube-left   { background: rgba(245, 158, 11, 0.85); transform: rotateY(-90deg) translateZ(60px); }
+    .zhang_cube-top    { background: rgba(239, 68, 68, 0.85); transform: rotateX(90deg) translateZ(60px); }
+    .zhang_cube-bottom { background: rgba(236, 72, 153, 0.85); transform: rotateX(-90deg) translateZ(60px); }
+
+    @keyframes zhang_spin {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    .zhang_flip-card {
+      width: 160px;
+      height: 100px;
+      perspective: 800px;
+      cursor: pointer;
+    }
+
+    .zhang_flip-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease;
+    }
+
+    .zhang_flip-card:hover .zhang_flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .zhang_flip-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      backface-visibility: hidden;
+    }
+
+    .zhang_flip-front {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+    }
+
+    .zhang_flip-back {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      transform: rotateY(180deg);
+    }
+
+    .zhang_rotate-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      animation: zhang_rotate3d 4s ease-in-out infinite;
+    }
+
+    @keyframes zhang_rotate3d {
+      0%   { transform: rotateX(0deg) rotateY(0deg); }
+      50%  { transform: rotateX(180deg) rotateY(0deg); }
+      100% { transform: rotateX(180deg) rotateY(180deg); }
+    }
+
+    .zhang_carousel-scene {
+      width: 140px;
+      height: 100px;
+      perspective: 700px;
+    }
+
+    .zhang_carousel {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: zhang_carousel-spin 8s linear infinite;
+    }
+
+    .zhang_carousel-item {
+      position: absolute;
+      width: 140px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .zhang_carousel-item:nth-child(1) { background: #ef4444; transform: rotateY(0deg) translateZ(160px); }
+    .zhang_carousel-item:nth-child(2) { background: #f59e0b; transform: rotateY(72deg) translateZ(160px); }
+    .zhang_carousel-item:nth-child(3) { background: #10b981; transform: rotateY(144deg) translateZ(160px); }
+    .zhang_carousel-item:nth-child(4) { background: #3b82f6; transform: rotateY(216deg) translateZ(160px); }
+    .zhang_carousel-item:nth-child(5) { background: #8b5cf6; transform: rotateY(288deg) translateZ(160px); }
+
+    @keyframes zhang_carousel-spin {
+      from { transform: rotateY(0deg); }
+      to   { transform: rotateY(360deg); }
+    }
+
+    .zhang_demo-label {
+      width: 100%;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .zhang_demo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>CSS3 3D 动画</h1>
+  <p class="zhang_subtitle">张淮皓的《高级网页设计》课堂实践 —— transform 与 3D 变换</p>
+
+  <div class="zhang_card">
+    <h2>1. 3D 旋转立方体</h2>
+    <p class="zhang_desc">
+      使用 <code>transform-style: preserve-3d</code> 建立 3D 空间，6 个面通过
+      <code>rotateX / rotateY + translateZ</code> 拼成立方体，再用 <code>@keyframes</code> 持续旋转。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <div class="zhang_demo-label">animation: spin 6s linear infinite</div>
+        <div class="zhang_cube-scene">
+          <div class="zhang_cube">
+            <div class="zhang_cube-face zhang_cube-front">前</div>
+            <div class="zhang_cube-face zhang_cube-back">后</div>
+            <div class="zhang_cube-face zhang_cube-right">右</div>
+            <div class="zhang_cube-face zhang_cube-left">左</div>
+            <div class="zhang_cube-face zhang_cube-top">上</div>
+            <div class="zhang_cube-face zhang_cube-bottom">下</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>2. 3D 卡片翻转（hover 触发）</h2>
+    <p class="zhang_desc">
+      利用 <code>perspective</code> 营造景深，<code>backface-visibility: hidden</code> 隐藏背面，
+      hover 时 <code>rotateY(180deg)</code> 实现翻牌效果。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <div class="zhang_demo-label">鼠标悬停查看翻转</div>
+        <div class="zhang_flip-card">
+          <div class="zhang_flip-inner">
+            <div class="zhang_flip-face zhang_flip-front">正面</div>
+            <div class="zhang_flip-face zhang_flip-back">背面</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>3. 3D 翻转方块</h2>
+    <p class="zhang_desc">
+      纯动画驱动，<code>rotateX</code> 与 <code>rotateY</code> 组合出空间翻转效果。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <div class="zhang_demo-label">rotateX + rotateY 组合</div>
+        <div class="zhang_rotate-box">3D</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>4. 3D 图片carousel</h2>
+    <p class="zhang_desc">
+      多个面板沿 <code>rotateY</code> 均匀分布并 <code>translateZ</code> 推出，整体绕 Y 轴旋转形成环形轮播。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <div class="zhang_demo-label">5 面板环形旋转</div>
+        <div class="zhang_carousel-scene">
+          <div class="zhang_carousel">
+            <div class="zhang_carousel-item">1</div>
+            <div class="zhang_carousel-item">2</div>
+            <div class="zhang_carousel-item">3</div>
+            <div class="zhang_carousel-item">4</div>
+            <div class="zhang_carousel-item">5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>5. 核心属性速查</h2>
+    <p class="zhang_desc" style="margin:0;">
+      · <code>perspective</code>：观察者与 z=0 平面的距离，值越小透视越强；<br>
+      · <code>transform-style: preserve-3d</code>：子元素在 3D 空间中渲染；<br>
+      · <code>backface-visibility: hidden</code>：元素背面不可见；<br>
+      · <code>rotateX / rotateY / rotateZ</code>：绕对应轴旋转；<br>
+      · <code>translateZ</code>：沿 Z 轴推拉，是 3D 层次感的关键。
+    </p>
+  </div>
+</body>
+</html>

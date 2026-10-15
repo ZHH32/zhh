@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web 前端的长度单位</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px 80px;
+      background: #111827;
+      color: #e5e7eb;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .zhang_subtitle {
+      text-align: center;
+      color: #9ca3af;
+      margin-bottom: 40px;
+    }
+
+    .zhang_card {
+      max-width: 760px;
+      margin: 0 auto 32px;
+      padding: 28px 32px;
+      border-radius: 16px;
+      background: #1f2937;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .zhang_card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      border-left: 4px solid #60a5fa;
+      padding-left: 12px;
+    }
+
+    .zhang_unit-name {
+      font-family: Consolas, monospace;
+      color: #fbbf24;
+    }
+
+    .zhang_desc {
+      color: #d1d5db;
+      line-height: 1.8;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      background: #374151;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #7dd3fc;
+    }
+
+    .zhang_demo-area {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #111827;
+      overflow: hidden;
+    }
+
+    .zhang_demo-label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .zhang_box {
+      border-radius: 8px;
+      background: #3b82f6;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .zhang_box-em {
+      width: 10em;
+      height: 3em;
+      font-size: 18px;
+    }
+
+    .zhang_box-rem {
+      width: 8rem;
+      height: 3rem;
+    }
+
+    .zhang_box-percent {
+      width: 50%;
+      height: 40px;
+    }
+
+    .zhang_box-vw {
+      width: 20vw;
+      height: 40px;
+    }
+
+    .zhang_box-vh {
+      width: 60px;
+      height: 12vh;
+    }
+
+    .zhang_box-vmin {
+      width: 15vmin;
+      height: 15vmin;
+      border-radius: 50%;
+      background: #8b5cf6;
+    }
+
+    .zhang_parent-font {
+      font-size: 20px;
+    }
+
+    .zhang_child-em {
+      font-size: 1.5em;
+      color: #34d399;
+    }
+
+    .zhang_child-rem {
+      font-size: 1.5rem;
+      color: #f472b6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #374151;
+    }
+
+    th {
+      background: #111827;
+      color: #93c5fd;
+    }
+
+    td:first-child {
+      font-family: Consolas, monospace;
+      color: #fbbf24;
+      white-space: nowrap;
+    }
+
+    .zhang_viewport-note {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web 前端的长度单位</h1>
+  <p class="zhang_subtitle">张淮皓的《高级网页设计》课堂实践 —— CSS 长度单位一览</p>
+
+  <div class="zhang_card">
+    <h2>1. 绝对单位 <span class="zhang_unit-name">px</span></h2>
+    <p class="zhang_desc">
+      像素（pixel），最常用的绝对单位。不随父元素或视口变化，大小固定。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">width: 200px; height: 60px;</p>
+      <div class="zhang_box" style="width: 200px; height: 60px;">200px × 60px</div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>2. 相对单位 <span class="zhang_unit-name">em</span></h2>
+    <p class="zhang_desc">
+      相对于<strong>当前元素（或父元素）的 font-size</strong>。常用于 padding、margin，实现随字体缩放的弹性布局。
+      例：父元素 <code>font-size: 20px</code>，则 <code>1.5em = 30px</code>。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">父元素 font-size: 20px; 子元素 width: 10em; height: 3em; font-size: 18px</p>
+      <div class="zhang_parent-font">
+        <div class="zhang_box zhang_box-em">10em × 3em</div>
+        <p style="margin-top:12px;">当前文字：<span class="zhang_child-em">1.5em = 30px（随父级字体变化）</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>3. 相对单位 <span class="zhang_unit-name">rem</span></h2>
+    <p class="zhang_desc">
+      root em，相对于<strong>根元素（html）的 font-size</strong>（默认 16px）。
+      不受父级字体影响，全站统一缩放，适合响应式布局。
+      例：<code>8rem = 8 × 16px = 128px</code>。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">width: 8rem; height: 3rem;</p>
+      <div class="zhang_box zhang_box-rem">8rem × 3rem</div>
+      <p class="zhang_viewport-note">提示：浏览器默认 html 的 font-size 为 16px。</p>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>4. 相对单位 <span class="zhang_unit-name">%</span></h2>
+    <p class="zhang_desc">
+      相对于<strong>父元素对应属性的值</strong>。宽度的 50% 即父元素宽度的一半。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">width: 50%; height: 40px;（相对上方容器宽度）</p>
+      <div class="zhang_box zhang_box-percent">宽度的 50%</div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>5. 视口单位 <span class="zhang_unit-name">vw / vh</span></h2>
+    <p class="zhang_desc">
+      相对于<strong>浏览器视口（viewport）</strong>：
+      <code>vw</code> = 视口宽度的 1%，<code>vh</code> = 视口高度的 1%。
+      窗口缩放时元素自动跟随变化，适合全屏布局与响应式排版。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">width: 20vw; height: 40px;（随窗口宽度变化）</p>
+      <div class="zhang_box zhang_box-vw">20vw</div>
+      <p class="zhang_demo-label" style="margin-top:14px;">width: 60px; height: 12vh;（随窗口高度变化）</p>
+      <div class="zhang_box zhang_box-vh">12vh</div>
+      <p class="zhang_viewport-note">试着拖动浏览器窗口大小，观察这两个色块的变化。</p>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>6. 视口单位 <span class="zhang_unit-name">vmin / vmax</span></h2>
+    <p class="zhang_desc">
+      <code>vmin</code> = 视口宽、高中<strong>较小</strong>值的 1%；<code>vmax</code> = 较大值的 1%。
+      常用于保证元素在横屏/竖屏下都保持比例。
+    </p>
+    <div class="zhang_demo-area">
+      <p class="zhang_demo-label">width: 15vmin; height: 15vmin;</p>
+      <div class="zhang_box zhang_box-vmin">15vmin</div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>7. 单位速查表</h2>
+    <table>
+      <thead>
+        <tr><th>单位</th><th>名称</th><th>相对基准</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>px</td><td>像素</td><td>绝对（固定）</td><td>边框、固定尺寸</td></tr>
+        <tr><td>em</td><td>字高</td><td>父元素 font-size</td><td>padding、行内弹性间距</td></tr>
+        <tr><td>rem</td><td>根字高</td><td>html 的 font-size</td><td>响应式字号、间距</td></tr>
+        <tr><td>%</td><td>百分比</td><td>父元素尺寸</td><td>流式布局宽度、高度</td></tr>
+        <tr><td>vw</td><td>视口宽 1%</td><td>浏览器窗口宽度</td><td>全屏区块、大标题</td></tr>
+        <tr><td>vh</td><td>视口高 1%</td><td>浏览器窗口高度</td><td>整屏容器高度</td></tr>
+        <tr><td>vmin</td><td>视口较小边 1%</td><td>视口短边</td><td>正方形自适应元素</td></tr>
+        <tr><td>vmax</td><td>视口较大边 1%</td><td>视口长边</td><td>横竖屏自适应</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="zhang_card">
+    <h2>8. 实践建议</h2>
+    <p class="zhang_desc" style="margin:0;">
+      · 移动端优先用 <code>rem</code> 做全局字号，方便整体缩放；<br>
+      · 组件内部间距用 <code>em</code>，字号变时间距跟着变；<br>
+      · 全屏首屏用 <code>100vh</code>（注意移动浏览器地址栏问题）；<br>
+      · 流式布局用 <code>%</code>，固定细节用 <code>px</code>。
+    </p>
+  </div>
+</body>
+</html>

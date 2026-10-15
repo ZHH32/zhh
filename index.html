@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>张淮皓的《高级网页设计》课堂实践</title>
+  <style>
+    :root {
+      --bg-deep: #0f172a;
+      --bg-mid: #1e293b;
+      --panel: rgba(15, 23, 42, 0.72);
+      --panel-strong: rgba(15, 23, 42, 0.9);
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(148, 163, 184, 0.28);
+      --text: #e2e8f0;
+      --muted: #cbd5e1;
+      --accent: #7dd3fc;
+      --accent-2: #c084fc;
+      --accent-3: #34d399;
+      --shadow: rgba(15, 23, 42, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.22), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(192, 132, 252, 0.20), transparent 35%),
+        linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 55%, #111827 100%);
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 36px 20px 70px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.62);
+      border-radius: 28px;
+      padding: 36px 34px;
+      box-shadow: 0 24px 60px var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      filter: blur(18px);
+      opacity: 0.7;
+    }
+
+    .hero::before {
+      background: rgba(125, 211, 252, 0.18);
+      right: -40px;
+      top: -40px;
+    }
+
+    .hero::after {
+      background: rgba(192, 132, 252, 0.18);
+      left: -30px;
+      bottom: -60px;
+    }
+
+    .title-wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid rgba(125, 211, 252, 0.35);
+      background: rgba(125, 211, 252, 0.08);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4vw, 4rem);
+      line-height: 1.15;
+      letter-spacing: 1px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #f8fafc 0%, #a5f3fc 30%, #d8b4fe 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+      max-width: 750px;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .stats {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      min-width: 160px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section {
+      margin-top: 28px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px 22px 14px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22);
+    }
+
+    .section h2 {
+      margin: 0 0 18px;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .link-card {
+      position: relative;
+      display: block;
+      padding: 18px 18px 16px;
+      border-radius: 18px;
+      text-decoration: none;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.06), rgba(192, 132, 252, 0.06)),
+        var(--card);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      overflow: hidden;
+    }
+
+    .link-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+
+    .link-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(125, 211, 252, 0.6);
+      box-shadow: 0 14px 26px rgba(14, 116, 144, 0.18);
+    }
+
+    .page-name {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .page-tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.24);
+      color: #b7f7d3;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .prompt-box {
+      margin-top: 26px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 0.98rem;
+    }
+
+    .prompt-box strong {
+      color: #f8fafc;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .footer {
+      text-align: center;
+      color: #bfdbfe;
+      margin-top: 28px;
+      opacity: 0.9;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 26px 18px;
+      }
+
+      .section {
+        padding: 18px 16px 10px;
+      }
+
+      .links {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="hero">
+      <div class="title-wrap">
+        <div class="eyebrow">Course Practice</div>
+        <h1>张淮皓的《高级网页设计》课堂实践</h1>
+        <p class="subtitle">
+          汇总本目录下的全部网页作品，集中展示课程学习成果与前端实践案例，追求简洁、现代与交互感兼具的页面设计体验。
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <strong>16</strong>
+            <span>网页作品</span>
+          </div>
+          <div class="stat">
+            <strong>HTML</strong>
+            <span>原生代码</span>
+          </div>
+          <div class="stat">
+            <strong>CSS</strong>
+            <span>美化与布局</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="section">
+      <h2>作品导航</h2>
+      <div class="links">
+        <a class="link-card" href="1.html" target="_blank" rel="noopener">
+          <span class="page-name">1.html</span>
+          <span class="page-tag">作业一</span>
+        </a>
+
+        <a class="link-card" href="2-1.html" target="_blank" rel="noopener">
+          <span class="page-name">2-1.html</span>
+          <span class="page-tag">练习一</span>
+        </a>
+
+        <a class="link-card" href="2-2.html" target="_blank" rel="noopener">
+          <span class="page-name">2-2.html</span>
+          <span class="page-tag">练习二</span>
+        </a>
+
+        <a class="link-card" href="3-1.html" target="_blank" rel="noopener">
+          <span class="page-name">3-1.html</span>
+          <span class="page-tag">练习三</span>
+        </a>
+
+        <a class="link-card" href="3-2%20css.html" target="_blank" rel="noopener">
+          <span class="page-name">3-2 css.html</span>
+          <span class="page-tag">CSS 练习</span>
+        </a>
+
+        <a class="link-card" href="4-1%20css2.html" target="_blank" rel="noopener">
+          <span class="page-name">4-1 css2.html</span>
+          <span class="page-tag">高级案例</span>
+        </a>
+
+        <a class="link-card" href="5-1%20层叠与继承.html" target="_blank" rel="noopener">
+          <span class="page-name">5-1 层叠与继承.html</span>
+          <span class="page-tag">层叠与继承</span>
+        </a>
+
+        <a class="link-card" href="5-2%20盒模型.html" target="_blank" rel="noopener">
+          <span class="page-name">5-2 盒模型.html</span>
+          <span class="page-tag">盒模型</span>
+        </a>
+
+        <a class="link-card" href="6-1%20flex.html" target="_blank" rel="noopener">
+          <span class="page-name">6-1 flex.html</span>
+          <span class="page-tag">Flex 布局</span>
+        </a>
+
+        <a class="link-card" href="6-2.html" target="_blank" rel="noopener">
+          <span class="page-name">6-2.html</span>
+          <span class="page-tag">布局练习</span>
+        </a>
+
+        <a class="link-card" href="7-1%20上图下文.html" target="_blank" rel="noopener">
+          <span class="page-name">7-1 上图下文.html</span>
+          <span class="page-tag">图文布局</span>
+        </a>
+
+        <a class="link-card" href="7.2-左图右文.html" target="_blank" rel="noopener">
+          <span class="page-name">7.2-左图右文.html</span>
+          <span class="page-tag">图文组合</span>
+        </a>
+
+        <a class="link-card" href="8-1%20css3选择器.html" target="_blank" rel="noopener">
+          <span class="page-name">8-1 css3选择器.html</span>
+          <span class="page-tag">CSS3 选择器</span>
+        </a>
+
+        <a class="link-card" href="9-1%20transition.html" target="_blank" rel="noopener">
+          <span class="page-name">9-1 transition.html</span>
+          <span class="page-tag">过渡动画</span>
+        </a>
+
+        <a class="link-card" href="11-1.html" target="_blank" rel="noopener">
+          <span class="page-name">11-1.html</span>
+          <span class="page-tag">长度单位</span>
+        </a>
+
+        <a class="link-card" href="11-2.html" target="_blank" rel="noopener">
+          <span class="page-name">11-2.html</span>
+          <span class="page-tag">CSS3 3D 动画</span>
+        </a>
+      </div>
+    </main>
+
+    <section class="section">
+      <h2>本提示词</h2>
+      <div class="prompt-box">
+        <strong>提示词原文：</strong>
+        创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为袁磊的《高级网页设计》课堂实践，美化页面，页面中包括本提示词。
+      </div>
+    </section>
+
+    <div class="footer">Designed with native HTML &amp; CSS · 课堂实践入口页</div>
+  </div>
+</body>
+</html>

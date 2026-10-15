@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>响应式全屏盒子</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html { font-size: 16px; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #ff6b6b;
+      color: #fff;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      transition: background-color 0.5s ease;
+    }
+
+    .full-screen {
+      width: 100vw;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    @media (min-width: 600px) {
+      html { font-size: 18px; }
+      body { background-color: #feca57; }
+    }
+
+    @media (min-width: 900px) {
+      html { font-size: 20px; }
+      body { background-color: #48dbfb; }
+    }
+
+    @media (min-width: 1200px) {
+      html { font-size: 22px; }
+      body { background-color: #5f27cd; }
+    }
+  </style>
+</head>
+<body>
+  <div class="full-screen">
+    <h1>张淮皓</h1>
+  </div>
+</body>
+</html>

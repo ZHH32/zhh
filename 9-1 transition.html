@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0;padding: 0;}
+        img{display: block;}
+        ul{list-style: none;}
+        .list{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .list li{
+            width: 30%;
+            overflow: hidden;
+            position: relative;
+            flex-grow: 1;
+            margin: 6px;
+        }
+        .list img{
+            width: 100%;
+            transition: all 0.5s ease-in-out;
+        }
+        .text{
+            position: absolute;
+            height:33px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.5);
+            color: #fff;
+            transition: all 0.5s ease-in-out;
+            font-size: 14px;
+        }
+        .text h3{
+            height: 33px;
+            line-height: 33px;
+            text-align: center;
+        }
+        .text p{
+            height: 40px;
+            line-height: 20px;
+            padding: 5px;
+            overflow: hidden;
+            /* 首行空2格 */
+            text-indent: 2em;
+            font-size: 12px;
+        }
+        .list li:hover .text{
+            height: 100%;
+        }
+        .list li:nth-child(3n+1):hover img{
+            transform: scale(1.7);
+        }
+        .list li:nth-child(3n+2):hover .text{
+            height: 100%;
+        }
+        .list li:nth-child(3n) .text{
+            height: 83px;
+        }
+    </style>
+</head>
+<body>
+    <h2>张淮皓的transition过渡</h2>
+    <ul class="list">
+        <li>
+            <img src="./img/1d22e26b70e243b69cb092b76207b567.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/227eeab72932418f8ba271fcd19275cd.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+         <li>
+            <img src="./img/27c8fe1ed29749189b4d489c053df3e3.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/297e6ee9376b4733bf470237237f5a52.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/3006b943b8934d71b7b14d26a1a67654.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/bd32c88815bb4724aca48283d0eb7fff.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/e41ee90e834247e093f5932bd9b4bda3.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/eb4201fa2a9d4a35a0777947729fb40f.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+
+                <li>
+            <img src="./img/eb4bb0ebe36f4a01930751477329bc71.jpeg~tplv-a9rns2rl98-cthumb_lwm3.png">
+            <div class="text">
+                <h3>张淮皓的标题</h3>
+                <p>
+                    下面的文字，默认隐藏，可能在hover的时候显示文字，可能是固定高度，也可能是100%高度
+                </p>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>

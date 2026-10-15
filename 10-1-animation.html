@@ -1,0 +1,25 @@
+<style>
+  body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .box {
+    width: 240px;
+    height: 240px;
+    border-radius: 20px;
+    background-color: #ff6b6b;
+    animation: colorChange 8s ease-in-out infinite;
+  }
+
+  @keyframes colorChange {
+    0%   { background-color: #ff6b6b; }
+    33%  { background-color: #feca57; }
+    66%  { background-color: #48dbfb; }
+    100% { background-color: #5f27cd; }
+  }
+</style>
+
+<div class="box"></div>
