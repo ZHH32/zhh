@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张淮皓 · Font Awesome 字体图标</title>
+  <link rel="stylesheet" href="cdn/css/all.min.css">
+  <style>
+    :root {
+      --blue-300: #60a5fa;
+      --blue-400: #3b82f6;
+      --green-400: #34d399;
+      --red-400: #f87171;
+      --yellow-400: #fbbf24;
+      --purple-400: #c084fc;
+      --slate-400: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px 80px;
+      background: #111827;
+      color: #e5e7eb;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+
+    .zhang_subtitle {
+      text-align: center;
+      color: #9ca3af;
+      margin-bottom: 40px;
+    }
+
+    .zhang_card {
+      max-width: 1000px;
+      margin: 0 auto 36px;
+      padding: 28px 32px;
+      border-radius: 16px;
+      background: #1f2937;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .zhang_card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      border-left: 4px solid var(--blue-400);
+      padding-left: 12px;
+    }
+
+    .zhang_desc { color: #d1d5db; line-height: 1.8; }
+
+    code {
+      font-family: Consolas, monospace;
+      background: #374151;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #7dd3fc;
+    }
+
+    .zhang_demo-area {
+      margin-top: 20px;
+      padding: 26px 20px;
+      border-radius: 12px;
+      background: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+
+    .zhang_demo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zhang_demo-label {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .zhang_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .zhang_icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .zhang_icon-item:hover {
+      border-color: rgba(96, 165, 250, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .zhang_icon-item i { font-size: 24px; color: var(--blue-300); }
+    .zhang_icon-item span { font-size: 0.76rem; color: var(--slate-400); }
+
+    .zhang_size-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 28px;
+      flex-wrap: wrap;
+      font-size: 16px;
+    }
+
+    .zhang_color-row { display: flex; gap: 28px; flex-wrap: wrap; }
+    .zhang_color-item { display: flex; align-items: center; gap: 10px; font-size: 28px; }
+    .zhang_color-item span { font-size: 0.85rem; color: var(--slate-400); }
+
+    .zhang_list { font-size: 17px; line-height: 2.2; }
+
+    .zhang_table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .zhang_table th, .zhang_table td {
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    .zhang_table th { background: rgba(96, 165, 250, 0.12); color: #bfdbfe; }
+    .zhang_table td { color: #d1d5db; }
+  </style>
+</head>
+<body>
+  <h1>Font Awesome 字体图标</h1>
+  <p class="zhang_subtitle">张淮皓的《高级网页设计》课堂实践 —— 字体图标（Font Icon）</p>
+
+  <div class="zhang_card">
+    <h2>1. 什么是字体图标</h2>
+    <p class="zhang_desc">
+      字体图标是把图标做成一个<strong>字体文件</strong>：每个图标对应字体中的一个字形（glyph），
+      通过 <code>@font-face</code> 引入字体，再用 CSS 类名把图标"字符"渲染出来。
+      它本质上和文字一样，所以可以用 <code>font-size</code> 控制大小、用 <code>color</code> 控制颜色，
+      还能享受文字的抗锯齿效果。
+    </p>
+    <p class="zhang_desc">
+      本页面使用 Font Awesome 6 Free，CSS 与字体文件已下载到本地 <code>cdn/</code> 目录：
+      <code>cdn/css/all.min.css</code> + <code>cdn/webfonts/fa-*.woff2</code>。
+    </p>
+  </div>
+
+  <div class="zhang_card">
+    <h2>2. 引入方式</h2>
+    <p class="zhang_desc">
+      ① 在 <code>&lt;head&gt;</code> 中引入本地 CSS：
+      <code>&lt;link rel="stylesheet" href="cdn/css/all.min.css"&gt;</code><br>
+      ② CSS 会通过相对路径自动加载同级的 <code>cdn/webfonts/</code> 字体文件，无需额外配置。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <i class="fa-solid fa-link" style="font-size:30px;color:#60a5fa;"></i>
+        <span class="zhang_demo-label">引入成功即代表字体加载成功</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>3. 基础用法：图标网格</h2>
+    <p class="zhang_desc">
+      在元素上添加两个类：样式类（<code>fa-solid</code> 实心 / <code>fa-regular</code> 常规 / <code>fa-brands</code> 品牌）
+      + 图标类（<code>fa-图标名</code>），例如 <code>&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;</code>。
+    </p>
+    <div class="zhang_grid">
+      <div class="zhang_icon-item"><i class="fa-solid fa-house"></i><span>fa-house</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-user"></i><span>fa-user</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-users"></i><span>fa-users</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-heart"></i><span>fa-heart</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-star"></i><span>fa-star</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-envelope"></i><span>fa-envelope</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-bell"></i><span>fa-bell</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-camera"></i><span>fa-camera</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-calendar-days"></i><span>fa-calendar-days</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-clock"></i><span>fa-clock</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-gear"></i><span>fa-gear</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-lock"></i><span>fa-lock</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-unlock"></i><span>fa-unlock</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-trash-can"></i><span>fa-trash-can</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-pen"></i><span>fa-pen</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-paper-plane"></i><span>fa-paper-plane</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-thumbs-up"></i><span>fa-thumbs-up</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-thumbs-down"></i><span>fa-thumbs-down</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-bookmark"></i><span>fa-bookmark</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-folder"></i><span>fa-folder</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-file"></i><span>fa-file</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-image"></i><span>fa-image</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-music"></i><span>fa-music</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-video"></i><span>fa-video</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-gamepad"></i><span>fa-gamepad</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-car"></i><span>fa-car</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-plane"></i><span>fa-plane</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-globe"></i><span>fa-globe</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-wifi"></i><span>fa-wifi</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-battery-full"></i><span>fa-battery-full</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-sun"></i><span>fa-sun</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-moon"></i><span>fa-moon</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-cloud"></i><span>fa-cloud</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-fire"></i><span>fa-fire</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-bolt"></i><span>fa-bolt</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-shield"></i><span>fa-shield</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-key"></i><span>fa-key</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-link"></i><span>fa-link</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-paperclip"></i><span>fa-paperclip</span></div>
+      <div class="zhang_icon-item"><i class="fa-solid fa-scissors"></i><span>fa-scissors</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>4. 尺寸控制</h2>
+    <p class="zhang_desc">
+      图标大小跟随字体，可以直接用 <code>font-size</code>，也可以使用官方尺寸类：
+      <code>fa-xs</code> <code>fa-sm</code> <code>fa-lg</code> <code>fa-2x</code> ~ <code>fa-8x</code>（em 单位）。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_size-row">
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-xs"></i><span class="zhang_demo-label">fa-xs</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-sm"></i><span class="zhang_demo-label">fa-sm</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-lg"></i><span class="zhang_demo-label">fa-lg</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-2x"></i><span class="zhang_demo-label">fa-2x</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-4x"></i><span class="zhang_demo-label">fa-4x</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-6x"></i><span class="zhang_demo-label">fa-6x</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house fa-8x"></i><span class="zhang_demo-label">fa-8x</span></div>
+        <div class="zhang_demo-item"><i class="fa-solid fa-house" style="font-size:44px;"></i><span class="zhang_demo-label">font-size:44px</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>5. 颜色控制</h2>
+    <p class="zhang_desc">
+      字体图标的颜色完全由 <code>color</code> 属性决定，并支持渐变文字效果（<code>background-clip: text</code>）。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_color-row">
+        <div class="zhang_color-item" style="color:#f87171;"><i class="fa-solid fa-heart"></i><span>#f87171</span></div>
+        <div class="zhang_color-item" style="color:#60a5fa;"><i class="fa-solid fa-heart"></i><span>#60a5fa</span></div>
+        <div class="zhang_color-item" style="color:#34d399;"><i class="fa-solid fa-heart"></i><span>#34d399</span></div>
+        <div class="zhang_color-item" style="color:#fbbf24;"><i class="fa-solid fa-heart"></i><span>#fbbf24</span></div>
+        <div class="zhang_color-item" style="color:#c084fc;"><i class="fa-solid fa-heart"></i><span>#c084fc</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>6. 旋转与动画</h2>
+    <p class="zhang_desc">
+      Font Awesome 内置了多种动画类：<code>fa-spin</code> 旋转、<code>fa-pulse</code> 脉冲、<code>fa-beat</code> 心跳、
+      <code>fa-bounce</code> 弹跳、<code>fa-shake</code> 抖动、<code>fa-flip</code> 翻转，以及静态旋转 <code>fa-rotate-90/180/270</code>。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item"><i class="fa-solid fa-house fa-spin"></i><span class="zhang_demo-label">fa-spin</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-star fa-pulse"></i><span class="zhang_demo-label">fa-pulse</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-bolt fa-beat"></i><span class="zhang_demo-label">fa-beat</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-heart fa-bounce"></i><span class="zhang_demo-label">fa-bounce</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-bell fa-shake"></i><span class="zhang_demo-label">fa-shake</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-plane fa-flip"></i><span class="zhang_demo-label">fa-flip</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-gear fa-spin-reverse"></i><span class="zhang_demo-label">fa-spin-reverse</span></div>
+      <div class="zhang_demo-item"><i class="fa-solid fa-arrow-right fa-rotate-90"></i><span class="zhang_demo-label">fa-rotate-90</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>7. 定宽图标与列表</h2>
+    <p class="zhang_desc">
+      <code>fa-fw</code>（fixed width）让所有图标占据相同宽度，适合按钮和导航；
+      <code>fa-ul</code> + <code>fa-li</code> 可以把图标作为列表项目符号，替代默认的圆点。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <div style="font-size:20px;display:flex;flex-direction:column;gap:10px;color:#60a5fa;">
+          <i class="fa-solid fa-house fa-fw"></i>
+          <i class="fa-solid fa-bell fa-fw"></i>
+          <i class="fa-solid fa-gear fa-fw"></i>
+        </div>
+        <span class="zhang_demo-label">fa-fw 定宽对齐</span>
+      </div>
+      <div class="zhang_demo-item">
+        <ul class="fa-ul zhang_list">
+          <li><span class="fa-li"><i class="fa-solid fa-check"></i></span>字体图标加载成功</li>
+          <li><span class="fa-li"><i class="fa-solid fa-check"></i></span>支持 font-size 控制大小</li>
+          <li><span class="fa-li"><i class="fa-solid fa-check"></i></span>支持 color 控制颜色</li>
+          <li><span class="fa-li"><i class="fa-solid fa-check"></i></span>支持内置动画效果</li>
+        </ul>
+        <span class="zhang_demo-label">fa-ul 图标列表</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>8. 品牌图标（fa-brands）</h2>
+    <p class="zhang_desc">
+      品牌图标使用 <code>fa-brands</code> 样式类，例如 <code>&lt;i class="fa-brands fa-github"&gt;&lt;/i&gt;</code>。
+    </p>
+    <div class="zhang_grid">
+      <div class="zhang_icon-item"><i class="fa-brands fa-github"></i><span>fa-github</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-gitlab"></i><span>fa-gitlab</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-chrome"></i><span>fa-chrome</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-firefox"></i><span>fa-firefox</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-edge"></i><span>fa-edge</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-apple"></i><span>fa-apple</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-android"></i><span>fa-android</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-windows"></i><span>fa-windows</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-linux"></i><span>fa-linux</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-codepen"></i><span>fa-codepen</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-dribbble"></i><span>fa-dribbble</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-facebook"></i><span>fa-facebook</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-instagram"></i><span>fa-instagram</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-linkedin"></i><span>fa-linkedin</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-twitter"></i><span>fa-twitter</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-youtube"></i><span>fa-youtube</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-telegram"></i><span>fa-telegram</span></div>
+      <div class="zhang_icon-item"><i class="fa-brands fa-discord"></i><span>fa-discord</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>9. 字体图标 vs SVG 图标</h2>
+    <p class="zhang_desc" style="margin:0 0 4px;">
+      同课程的 <code>13-2.html</code> 演示了 Lucide 的 SVG 图标方案，对比如下：
+    </p>
+    <table class="zhang_table">
+      <tr>
+        <th>对比项</th>
+        <th>字体图标（Font Awesome）</th>
+        <th>SVG 图标（Lucide）</th>
+      </tr>
+      <tr>
+        <td>实现原理</td>
+        <td>图标是字体字形，CSS 类名渲染</td>
+        <td>矢量图形标记，内联或 sprite 引用</td>
+      </tr>
+      <tr>
+        <td>大小控制</td>
+        <td>font-size / fa-2x 等尺寸类</td>
+        <td>width / height 属性或 CSS</td>
+      </tr>
+      <tr>
+        <td>颜色控制</td>
+        <td>color 属性（单色系）</td>
+        <td>stroke / fill（currentColor），可多色</td>
+      </tr>
+      <tr>
+        <td>动画能力</td>
+        <td>内置 spin / bounce 等丰富动画</td>
+        <td>依赖 CSS / SMIL，灵活但需自写</td>
+      </tr>
+      <tr>
+        <td>加载方式</td>
+        <td>需加载字体文件，首次有 FOUT 风险</td>
+        <td>内联无请求；sprite 需一次请求</td>
+      </tr>
+      <tr>
+        <td>清晰度</td>
+        <td>受字体渲染影响，小尺寸可能发虚</td>
+        <td>矢量任意缩放清晰</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

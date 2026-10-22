@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张淮皓 · Lucide SVG 图标</title>
+  <style>
+    :root {
+      --blue-300: #60a5fa;
+      --blue-400: #3b82f6;
+      --green-400: #34d399;
+      --red-400: #f87171;
+      --yellow-400: #fbbf24;
+      --purple-400: #c084fc;
+      --slate-400: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px 80px;
+      background: #111827;
+      color: #e5e7eb;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+
+    .zhang_subtitle {
+      text-align: center;
+      color: #9ca3af;
+      margin-bottom: 40px;
+    }
+
+    .zhang_card {
+      max-width: 1000px;
+      margin: 0 auto 36px;
+      padding: 28px 32px;
+      border-radius: 16px;
+      background: #1f2937;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .zhang_card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      border-left: 4px solid var(--blue-400);
+      padding-left: 12px;
+    }
+
+    .zhang_desc { color: #d1d5db; line-height: 1.8; }
+
+    code {
+      font-family: Consolas, monospace;
+      background: #374151;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #7dd3fc;
+    }
+
+    .zhang_demo-area {
+      margin-top: 20px;
+      padding: 26px 20px;
+      border-radius: 12px;
+      background: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+
+    .zhang_demo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zhang_demo-label {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .zhang_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .zhang_icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .zhang_icon-item:hover {
+      border-color: rgba(96, 165, 250, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .zhang_icon-item i { display: inline-flex; }
+    .zhang_icon-item .lucide { width: 22px; height: 22px; color: var(--blue-300); }
+    .zhang_icon-item span { font-size: 0.76rem; color: var(--slate-400); }
+
+    .zhang_size-row { display: flex; align-items: flex-end; gap: 28px; flex-wrap: wrap; }
+
+    .zhang_size-16 { width: 16px; height: 16px; }
+    .zhang_size-24 { width: 24px; height: 24px; }
+    .zhang_size-32 { width: 32px; height: 32px; }
+    .zhang_size-48 { width: 48px; height: 48px; }
+    .zhang_size-64 { width: 64px; height: 64px; }
+
+    .zhang_color-row { display: flex; gap: 28px; flex-wrap: wrap; }
+    .zhang_color-item { display: flex; align-items: center; gap: 10px; }
+    .zhang_color-item .lucide { width: 26px; height: 26px; }
+    .zhang_color-item span { font-size: 0.85rem; color: var(--slate-400); }
+
+    .zhang_lucide-anim-spin { animation: zhang_lucide_spin 1.6s linear infinite; }
+    .zhang_lucide-anim-bounce { animation: zhang_lucide_bounce 1.2s ease-in-out infinite; }
+    .zhang_lucide-anim-draw { stroke-dasharray: 48; stroke-dashoffset: 48; animation: zhang_lucide_draw 2.4s ease-in-out infinite; }
+
+    @keyframes zhang_lucide_spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes zhang_lucide_bounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    @keyframes zhang_lucide_draw {
+      0%   { stroke-dashoffset: 48; }
+      50%  { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -48; }
+    }
+
+    .zhang_lucide-hover {
+      transition: transform 0.35s ease, stroke 0.35s ease;
+      cursor: pointer;
+    }
+
+    .zhang_lucide-hover:hover {
+      transform: rotate(-12deg) scale(1.25);
+      stroke: #f87171;
+    }
+
+    .zhang_markup {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 10px;
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #a5b4fc;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .zhang_table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .zhang_table th, .zhang_table td {
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    .zhang_table th { background: rgba(96, 165, 250, 0.12); color: #bfdbfe; }
+    .zhang_table td { color: #d1d5db; }
+  </style>
+</head>
+<body>
+  <h1>Lucide SVG 图标</h1>
+  <p class="zhang_subtitle">张淮皓的《高级网页设计》课堂实践 —— SVG 图标（SVG Icon）</p>
+
+  <div class="zhang_card">
+    <h2>1. 什么是 SVG 图标</h2>
+    <p class="zhang_desc">
+      SVG 图标是用 <code>&lt;svg&gt;</code> 矢量图形描述的图标：每个图标就是一段 XML 标记（路径、圆形、描边等），
+      可以直接内联到 HTML 中。因为是真正的矢量图形，它<strong>任意缩放都清晰</strong>，
+      并且可以用 CSS 自由控制 <code>stroke</code>（描边）、<code>fill</code>（填充）、<code>stroke-width</code>（粗细）等属性。
+    </p>
+    <p class="zhang_desc">
+      本页面使用 Lucide 图标库（当前版本 1.59.0）。它的官方用法是通过 JS 把
+      <code>&lt;i data-lucide="图标名"&gt;</code> 这样的占位元素在运行时<strong>替换为内联 SVG</strong>，
+      JS 文件已下载到本地 <code>cdn/lucide.min.js</code>。
+    </p>
+  </div>
+
+  <div class="zhang_card">
+    <h2>2. 引入与使用</h2>
+    <p class="zhang_desc">
+      ① 引入本地 JS：<code>&lt;script src="cdn/lucide.min.js"&gt;&lt;/script&gt;</code><br>
+      ② 声明式使用：<code>&lt;i data-lucide="house"&gt;&lt;/i&gt;</code><br>
+      ③ 执行 <code>lucide.createIcons()</code> 后，占位元素被替换为真实的 <code>&lt;svg&gt;</code> 标签。
+      也可以传入全局属性，如 <code>lucide.createIcons({ attrs: { 'stroke-width': 1.5 } })</code>。
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item">
+        <i data-lucide="house" style="--c:#60a5fa;color:#60a5fa;"></i>
+        <span class="zhang_demo-label">data-lucide="house" → &lt;svg&gt;</span>
+      </div>
+      <div class="zhang_demo-item">
+        <i data-lucide="search" style="color:#34d399;"></i>
+        <span class="zhang_demo-label">data-lucide="search"</span>
+      </div>
+      <div class="zhang_demo-item">
+        <i data-lucide="rocket" style="color:#c084fc;"></i>
+        <span class="zhang_demo-label">data-lucide="rocket"</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>3. 常用图标网格</h2>
+    <p class="zhang_desc">
+      以下均由 <code>&lt;i data-lucide="..."&gt;</code> 生成，JS 执行后全部变为内联 SVG：
+    </p>
+    <div class="zhang_grid">
+      <div class="zhang_icon-item"><i data-lucide="house"></i><span>house</span></div>
+      <div class="zhang_icon-item"><i data-lucide="search"></i><span>search</span></div>
+      <div class="zhang_icon-item"><i data-lucide="user"></i><span>user</span></div>
+      <div class="zhang_icon-item"><i data-lucide="users"></i><span>users</span></div>
+      <div class="zhang_icon-item"><i data-lucide="heart"></i><span>heart</span></div>
+      <div class="zhang_icon-item"><i data-lucide="star"></i><span>star</span></div>
+      <div class="zhang_icon-item"><i data-lucide="thumbs-up"></i><span>thumbs-up</span></div>
+      <div class="zhang_icon-item"><i data-lucide="thumbs-down"></i><span>thumbs-down</span></div>
+      <div class="zhang_icon-item"><i data-lucide="bookmark"></i><span>bookmark</span></div>
+      <div class="zhang_icon-item"><i data-lucide="folder"></i><span>folder</span></div>
+      <div class="zhang_icon-item"><i data-lucide="file-text"></i><span>file-text</span></div>
+      <div class="zhang_icon-item"><i data-lucide="image"></i><span>image</span></div>
+      <div class="zhang_icon-item"><i data-lucide="music"></i><span>music</span></div>
+      <div class="zhang_icon-item"><i data-lucide="video"></i><span>video</span></div>
+      <div class="zhang_icon-item"><i data-lucide="gamepad-2"></i><span>gamepad-2</span></div>
+      <div class="zhang_icon-item"><i data-lucide="send"></i><span>send</span></div>
+      <div class="zhang_icon-item"><i data-lucide="trash-2"></i><span>trash-2</span></div>
+      <div class="zhang_icon-item"><i data-lucide="edit-3"></i><span>edit-3</span></div>
+      <div class="zhang_icon-item"><i data-lucide="pencil"></i><span>pencil</span></div>
+      <div class="zhang_icon-item"><i data-lucide="paintbrush"></i><span>paintbrush</span></div>
+      <div class="zhang_icon-item"><i data-lucide="palette"></i><span>palette</span></div>
+      <div class="zhang_icon-item"><i data-lucide="hammer"></i><span>hammer</span></div>
+      <div class="zhang_icon-item"><i data-lucide="wrench"></i><span>wrench</span></div>
+      <div class="zhang_icon-item"><i data-lucide="magnet"></i><span>magnet</span></div>
+      <div class="zhang_icon-item"><i data-lucide="link-2"></i><span>link-2</span></div>
+      <div class="zhang_icon-item"><i data-lucide="paperclip"></i><span>paperclip</span></div>
+      <div class="zhang_icon-item"><i data-lucide="scissors"></i><span>scissors</span></div>
+      <div class="zhang_icon-item"><i data-lucide="clipboard"></i><span>clipboard</span></div>
+      <div class="zhang_icon-item"><i data-lucide="list"></i><span>list</span></div>
+      <div class="zhang_icon-item"><i data-lucide="check"></i><span>check</span></div>
+      <div class="zhang_icon-item"><i data-lucide="plus"></i><span>plus</span></div>
+      <div class="zhang_icon-item"><i data-lucide="minus"></i><span>minus</span></div>
+      <div class="zhang_icon-item"><i data-lucide="x"></i><span>x</span></div>
+      <div class="zhang_icon-item"><i data-lucide="arrow-right"></i><span>arrow-right</span></div>
+      <div class="zhang_icon-item"><i data-lucide="arrow-left"></i><span>arrow-left</span></div>
+      <div class="zhang_icon-item"><i data-lucide="arrow-up"></i><span>arrow-up</span></div>
+      <div class="zhang_icon-item"><i data-lucide="arrow-down"></i><span>arrow-down</span></div>
+      <div class="zhang_icon-item"><i data-lucide="chevron-down"></i><span>chevron-down</span></div>
+      <div class="zhang_icon-item"><i data-lucide="play"></i><span>play</span></div>
+      <div class="zhang_icon-item"><i data-lucide="pause"></i><span>pause</span></div>
+      <div class="zhang_icon-item"><i data-lucide="square"></i><span>square</span></div>
+      <div class="zhang_icon-item"><i data-lucide="volume-2"></i><span>volume-2</span></div>
+      <div class="zhang_icon-item"><i data-lucide="mic"></i><span>mic</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>4. 更多图标（界面与品牌场景）</h2>
+    <div class="zhang_grid">
+      <div class="zhang_icon-item"><i data-lucide="headphones"></i><span>headphones</span></div>
+      <div class="zhang_icon-item"><i data-lucide="camera"></i><span>camera</span></div>
+      <div class="zhang_icon-item"><i data-lucide="phone"></i><span>phone</span></div>
+      <div class="zhang_icon-item"><i data-lucide="globe"></i><span>globe</span></div>
+      <div class="zhang_icon-item"><i data-lucide="wifi"></i><span>wifi</span></div>
+      <div class="zhang_icon-item"><i data-lucide="battery-full"></i><span>battery-full</span></div>
+      <div class="zhang_icon-item"><i data-lucide="sun"></i><span>sun</span></div>
+      <div class="zhang_icon-item"><i data-lucide="moon"></i><span>moon</span></div>
+      <div class="zhang_icon-item"><i data-lucide="cloud"></i><span>cloud</span></div>
+      <div class="zhang_icon-item"><i data-lucide="umbrella"></i><span>umbrella</span></div>
+      <div class="zhang_icon-item"><i data-lucide="snowflake"></i><span>snowflake</span></div>
+      <div class="zhang_icon-item"><i data-lucide="flame"></i><span>flame</span></div>
+      <div class="zhang_icon-item"><i data-lucide="zap"></i><span>zap</span></div>
+      <div class="zhang_icon-item"><i data-lucide="shield"></i><span>shield</span></div>
+      <div class="zhang_icon-item"><i data-lucide="key"></i><span>key</span></div>
+      <div class="zhang_icon-item"><i data-lucide="lock"></i><span>lock</span></div>
+      <div class="zhang_icon-item"><i data-lucide="gift"></i><span>gift</span></div>
+      <div class="zhang_icon-item"><i data-lucide="cake"></i><span>cake</span></div>
+      <div class="zhang_icon-item"><i data-lucide="pizza"></i><span>pizza</span></div>
+      <div class="zhang_icon-item"><i data-lucide="graduation-cap"></i><span>graduation-cap</span></div>
+      <div class="zhang_icon-item"><i data-lucide="book"></i><span>book</span></div>
+      <div class="zhang_icon-item"><i data-lucide="compass"></i><span>compass</span></div>
+      <div class="zhang_icon-item"><i data-lucide="map-pin"></i><span>map-pin</span></div>
+      <div class="zhang_icon-item"><i data-lucide="train-front"></i><span>train-front</span></div>
+      <div class="zhang_icon-item"><i data-lucide="car"></i><span>car</span></div>
+      <div class="zhang_icon-item"><i data-lucide="bike"></i><span>bike</span></div>
+      <div class="zhang_icon-item"><i data-lucide="anchor"></i><span>anchor</span></div>
+      <div class="zhang_icon-item"><i data-lucide="rocket"></i><span>rocket</span></div>
+      <div class="zhang_icon-item"><i data-lucide="ghost"></i><span>ghost</span></div>
+      <div class="zhang_icon-item"><i data-lucide="cat"></i><span>cat</span></div>
+      <div class="zhang_icon-item"><i data-lucide="dog"></i><span>dog</span></div>
+      <div class="zhang_icon-item"><i data-lucide="bot"></i><span>bot</span></div>
+      <div class="zhang_icon-item"><i data-lucide="bug"></i><span>bug</span></div>
+      <div class="zhang_icon-item"><i data-lucide="coffee"></i><span>coffee</span></div>
+      <div class="zhang_icon-item"><i data-lucide="trophy"></i><span>trophy</span></div>
+      <div class="zhang_icon-item"><i data-lucide="crown"></i><span>crown</span></div>
+      <div class="zhang_icon-item"><i data-lucide="medal"></i><span>medal</span></div>
+      <div class="zhang_icon-item"><i data-lucide="gem"></i><span>gem</span></div>
+      <div class="zhang_icon-item"><i data-lucide="wallet"></i><span>wallet</span></div>
+      <div class="zhang_icon-item"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>5. 尺寸控制</h2>
+    <p class="zhang_desc">
+      SVG 图标的尺寸通过 <code>width</code> / <code>height</code> 控制（属性或 CSS 均可），基于 24×24 的 viewBox 等比缩放：
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_size-row">
+        <div class="zhang_demo-item"><i data-lucide="house" class="zhang_size-16"></i><span class="zhang_demo-label">16px</span></div>
+        <div class="zhang_demo-item"><i data-lucide="house" class="zhang_size-24"></i><span class="zhang_demo-label">24px</span></div>
+        <div class="zhang_demo-item"><i data-lucide="house" class="zhang_size-32"></i><span class="zhang_demo-label">32px</span></div>
+        <div class="zhang_demo-item"><i data-lucide="house" class="zhang_size-48"></i><span class="zhang_demo-label">48px</span></div>
+        <div class="zhang_demo-item"><i data-lucide="house" class="zhang_size-64"></i><span class="zhang_demo-label">64px</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>6. 颜色与描边控制</h2>
+    <p class="zhang_desc">
+      Lucide 图标默认 <code>stroke="currentColor"</code>，描边颜色自动继承文字颜色 <code>color</code>；
+      <code>stroke-width</code> 控制描边粗细（占位元素上的属性会原样传给生成的 SVG）：
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_color-row">
+        <div class="zhang_color-item" style="color:#f87171;"><i data-lucide="heart"></i><span>color:#f87171</span></div>
+        <div class="zhang_color-item" style="color:#60a5fa;"><i data-lucide="heart"></i><span>color:#60a5fa</span></div>
+        <div class="zhang_color-item" style="color:#34d399;"><i data-lucide="heart"></i><span>color:#34d399</span></div>
+        <div class="zhang_color-item" style="color:#fbbf24;"><i data-lucide="heart"></i><span>color:#fbbf24</span></div>
+        <div class="zhang_color-item" style="color:#c084fc;"><i data-lucide="heart"></i><span>color:#c084fc</span></div>
+      </div>
+    </div>
+    <div class="zhang_demo-area">
+      <div class="zhang_color-row">
+        <div class="zhang_color-item"><i data-lucide="pen" stroke-width="1"></i><span>stroke-width:1</span></div>
+        <div class="zhang_color-item"><i data-lucide="pen" stroke-width="1.5"></i><span>stroke-width:1.5</span></div>
+        <div class="zhang_color-item"><i data-lucide="pen" stroke-width="2"></i><span>stroke-width:2</span></div>
+        <div class="zhang_color-item"><i data-lucide="pen" stroke-width="3"></i><span>stroke-width:3</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>7. 动画演示</h2>
+    <p class="zhang_desc">
+      SVG 图标可以直接用 CSS 变换与关键帧动画，也可以像下面一样给占位元素加自定义类（类名会保留到生成的 SVG 上）：
+    </p>
+    <div class="zhang_demo-area">
+      <div class="zhang_demo-item"><i data-lucide="loader" class="zhang_lucide-anim-spin"></i><span class="zhang_demo-label">CSS 旋转</span></div>
+      <div class="zhang_demo-item"><i data-lucide="rocket" class="zhang_lucide-anim-bounce"></i><span class="zhang_demo-label">CSS 弹跳</span></div>
+      <div class="zhang_demo-item"><i data-lucide="circle-dashed" class="zhang_lucide-anim-draw"></i><span class="zhang_demo-label">stroke-dash 描边动画</span></div>
+      <div class="zhang_demo-item"><i data-lucide="heart" class="zhang_lucide-hover"></i><span class="zhang_demo-label">hover 旋转变色</span></div>
+    </div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>8. 内联 SVG 代码</h2>
+    <p class="zhang_desc">
+      <code>lucide.createIcons()</code> 执行后，<code>&lt;i data-lucide="house"&gt;</code> 会被替换为下面这段真实的 SVG 标记。
+      这意味着图标就是页面 DOM 的一部分，可以用任意 CSS/JS 操作：
+    </p>
+    <div class="zhang_markup">&lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="lucide lucide-house"&gt;
+  &lt;path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/&gt;
+  &lt;path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/&gt;
+&lt;/svg&gt;</div>
+  </div>
+
+  <div class="zhang_card">
+    <h2>9. SVG 图标 vs 字体图标</h2>
+    <p class="zhang_desc" style="margin:0 0 4px;">
+      同课程的 <code>13-1.html</code> 演示了 Font Awesome 字体图标方案，对比如下：
+    </p>
+    <table class="zhang_table">
+      <tr>
+        <th>对比项</th>
+        <th>SVG 图标（Lucide）</th>
+        <th>字体图标（Font Awesome）</th>
+      </tr>
+      <tr>
+        <td>实现原理</td>
+        <td>矢量图形标记，内联到 DOM</td>
+        <td>图标是字体字形，CSS 类名渲染</td>
+      </tr>
+      <tr>
+        <td>大小控制</td>
+        <td>width / height 属性或 CSS</td>
+        <td>font-size / fa-2x 等尺寸类</td>
+      </tr>
+      <tr>
+        <td>颜色控制</td>
+        <td>stroke / fill / stroke-width，可多色</td>
+        <td>color 属性（单色系）</td>
+      </tr>
+      <tr>
+        <td>动画能力</td>
+        <td>CSS / SMIL 自由定制，需自写</td>
+        <td>内置 spin / bounce 等丰富动画</td>
+      </tr>
+      <tr>
+        <td>加载方式</td>
+        <td>JS 内联渲染，无字体请求</td>
+        <td>需加载字体文件，首次有 FOUT 风险</td>
+      </tr>
+      <tr>
+        <td>清晰度</td>
+        <td>矢量任意缩放清晰</td>
+        <td>受字体渲染影响，小尺寸可能发虚</td>
+      </tr>
+    </table>
+  </div>
+
+  <script src="cdn/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
