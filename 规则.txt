@@ -1,0 +1,3 @@
+设置项目规则，所有变量名称、css类、id名称都以zhh_开始，所有html页面中都包括注释：姓名：张淮皓，日期：功能名称。
+
+设置项目规则，使用原生的html，css和javascript实现，图标使用font目录下的iconfont图标，不适用第三方库和cdn，使用fetch获取服务器端数据，

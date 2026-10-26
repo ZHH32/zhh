@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript六种基本数据类型</title>
+    <style>
+        :root {
+            --zhh-blue: #3b82f6;
+            --zhh-green: #10b981;
+            --zhh-orange: #f59e0b;
+            --zhh-gray: #6b7280;
+            --zhh-purple: #8b5cf6;
+            --zhh-pink: #ec4899;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 960px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 36px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, var(--zhh-blue), var(--zhh-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+        }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid var(--zhh-blue);
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_num  { border-top-color: var(--zhh-blue); }
+        .zhh_c_str  { border-top-color: var(--zhh-green); }
+        .zhh_c_bool { border-top-color: var(--zhh-orange); }
+        .zhh_c_und  { border-top-color: var(--zhh-gray); }
+        .zhh_c_nul  { border-top-color: var(--zhh-purple); }
+        .zhh_c_obj  { border-top-color: var(--zhh-pink); }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+        .zhh_t_num  { background: var(--zhh-blue); }
+        .zhh_t_str  { background: var(--zhh-green); }
+        .zhh_t_bool { background: var(--zhh-orange); }
+        .zhh_t_und  { background: var(--zhh-gray); }
+        .zhh_t_nul  { background: var(--zhh-purple); }
+        .zhh_t_obj  { background: var(--zhh-pink); }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_card h3 span { color: #9ca3af; font-size: 13px; font-weight: normal; margin-left: 6px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #374151;
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+        .zhh_row { font-size: 14px; margin-top: 6px; color: #4b5563; }
+        .zhh_row b { color: #111827; font-family: Consolas, monospace; }
+        .zhh_tip {
+            margin-top: 32px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，日期：2026-10-22，功能名称：JavaScript六种基本数据类型 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JavaScript 六种基本数据类型</h1>
+            <p>张淮皓的JavaScript · 用 typeof 检测每个变量的类型</p>
+        </div>
+
+        <div class="zhh_grid">
+            <div class="zhh_card zhh_c_num">
+                <span class="zhh_tag zhh_t_num">类型 1</span>
+                <h3>数值型<span>number</span></h3>
+                <div class="zhh_code">var zhh_num = 100;</div>
+                <p class="zhh_row">值：<b id="zhh_val_num"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_num"></b></p>
+            </div>
+
+            <div class="zhh_card zhh_c_str">
+                <span class="zhh_tag zhh_t_str">类型 2</span>
+                <h3>字符串型<span>string</span></h3>
+                <div class="zhh_code">var zhh_str = "hello world";</div>
+                <p class="zhh_row">值：<b id="zhh_val_str"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_str"></b></p>
+            </div>
+
+            <div class="zhh_card zhh_c_bool">
+                <span class="zhh_tag zhh_t_bool">类型 3</span>
+                <h3>布尔型<span>boolean</span></h3>
+                <div class="zhh_code">var zhh_bool = true;</div>
+                <p class="zhh_row">值：<b id="zhh_val_bool"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_bool"></b></p>
+            </div>
+
+            <div class="zhh_card zhh_c_und">
+                <span class="zhh_tag zhh_t_und">类型 4</span>
+                <h3>未定义<span>undefined</span></h3>
+                <div class="zhh_code">var zhh_und;（声明未赋值）</div>
+                <p class="zhh_row">值：<b id="zhh_val_und"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_und"></b></p>
+            </div>
+
+            <div class="zhh_card zhh_c_nul">
+                <span class="zhh_tag zhh_t_nul">类型 5</span>
+                <h3>空值<span>null</span></h3>
+                <div class="zhh_code">var zhh_nul = null;</div>
+                <p class="zhh_row">值：<b id="zhh_val_nul"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_nul"></b></p>
+            </div>
+
+            <div class="zhh_card zhh_c_obj">
+                <span class="zhh_tag zhh_t_obj">类型 6</span>
+                <h3>对象<span>object</span></h3>
+                <div class="zhh_code">var zhh_obj = { zhh_name: "张淮皓" };</div>
+                <p class="zhh_row">值：<b id="zhh_val_obj"></b></p>
+                <p class="zhh_row">typeof 检测：<b id="zhh_type_obj"></b></p>
+            </div>
+        </div>
+
+        <div class="zhh_tip">
+            小知识：typeof null 的结果是 "object"，这是 JavaScript 的历史遗留问题。
+            按 F12 打开控制台（Console）可以查看六个类型的输出结果。
+        </div>
+    </div>
+
+    <script>
+        // 六种基本数据类型
+        var zhh_num = 100;                          // 数值型
+        var zhh_str = "hello world";                // 字符串型
+        var zhh_bool = true;                        // 布尔型
+        var zhh_und;                                // undefined
+        var zhh_nul = null;                         // null
+        var zhh_obj = { zhh_name: "张淮皓" };        // object
+
+        // 把值和 typeof 结果填入页面
+        document.getElementById("zhh_val_num").textContent = zhh_num;
+        document.getElementById("zhh_type_num").textContent = typeof zhh_num;
+        document.getElementById("zhh_val_str").textContent = zhh_str;
+        document.getElementById("zhh_type_str").textContent = typeof zhh_str;
+        document.getElementById("zhh_val_bool").textContent = zhh_bool;
+        document.getElementById("zhh_type_bool").textContent = typeof zhh_bool;
+        document.getElementById("zhh_val_und").textContent = String(zhh_und);
+        document.getElementById("zhh_type_und").textContent = typeof zhh_und;
+        document.getElementById("zhh_val_nul").textContent = String(zhh_nul);
+        document.getElementById("zhh_type_nul").textContent = typeof zhh_nul;
+        document.getElementById("zhh_val_obj").textContent = JSON.stringify(zhh_obj);
+        document.getElementById("zhh_type_obj").textContent = typeof zhh_obj;
+
+        // 控制台输出
+        console.log(typeof zhh_num, typeof zhh_str, typeof zhh_bool, typeof zhh_und, typeof zhh_nul, typeof zhh_obj);
+    </script>
+</body>
+</html>

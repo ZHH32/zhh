@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数七游戏 · 100个盒子</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 860px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 24px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+        .zhh_rules {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            padding: 16px 22px;
+            font-size: 14px;
+            line-height: 2;
+            color: #4b5563;
+            margin-bottom: 24px;
+        }
+        .zhh_rules b { color: #6366f1; }
+        .zhh_dot {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border-radius: 4px;
+            vertical-align: -2px;
+            margin: 0 4px 0 10px;
+        }
+        .zhh_dot_ok { background: #fff; border: 1px solid #d1d5db; }
+        .zhh_dot_skip { background: #fee2e2; border: 1px solid #fca5a5; }
+        .zhh_stat {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .zhh_stat_card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            padding: 10px 24px;
+            text-align: center;
+        }
+        .zhh_stat_card strong { font-size: 24px; color: #6366f1; }
+        .zhh_stat_card.zhh_stat_skip strong { color: #ef4444; }
+        .zhh_stat_card span { display: block; font-size: 12px; color: #9ca3af; margin-top: 2px; }
+        .zhh_box_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            padding: 18px;
+        }
+        .zhh_box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            font-weight: bold;
+            color: #374151;
+            transition: transform .2s;
+        }
+        .zhh_box:hover { transform: scale(1.15); position: relative; z-index: 2; }
+        .zhh_box_skip {
+            background: #fee2e2;
+            border: 1px dashed #fca5a5;
+        }
+        @media (max-width: 560px) {
+            .zhh_box_grid { grid-template-columns: repeat(5, 1fr); }
+            .zhh_box { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，日期：2026-10-26，功能名称：数七游戏 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>数七游戏 · 100 个盒子</h1>
+            <p>张淮皓的JavaScript · 满足数七规则的盒子是空的</p>
+        </div>
+
+        <div class="zhh_rules">
+            <b>数七规则：</b>遇到 <b>7 的倍数</b>（7、14、21…）或 <b>含数字 7 的数</b>（个位是 7：7、17、27…；十位是 7：70~79）要拍手跳过。
+            <span class="zhh_dot zhh_dot_ok"></span>普通盒子显示数字
+            <span class="zhh_dot zhh_dot_skip"></span>数七盒子为空
+        </div>
+
+        <div class="zhh_stat">
+            <div class="zhh_stat_card">
+                <strong id="zhh_ok_num">0</strong>
+                <span>显示数字</span>
+            </div>
+            <div class="zhh_stat_card zhh_stat_skip">
+                <strong id="zhh_hit_num">0</strong>
+                <span>空盒子（数七）</span>
+            </div>
+        </div>
+
+        <div class="zhh_box_grid" id="zhh_box_grid"></div>
+    </div>
+
+    <script>
+        // 生成 100 个盒子：满足数七规则的显示空盒子，否则显示数字
+        var zhh_grid = document.getElementById("zhh_box_grid");
+        var zhh_hit = 0; // 空盒子数量
+
+        for (var zhh_i = 1; zhh_i <= 100; zhh_i++) {
+            var zhh_isSkip = (zhh_i % 7 === 0)          // 7 的倍数
+                          || (zhh_i % 10 === 7)          // 个位是 7
+                          || (Math.floor(zhh_i / 10) === 7); // 十位是 7（70~79）
+
+            var zhh_box = document.createElement("div");
+            if (zhh_isSkip) {
+                zhh_box.className = "zhh_box zhh_box_skip";
+                zhh_box.title = zhh_i + "：数七，拍手跳过，盒子为空";
+                zhh_hit++;
+            } else {
+                zhh_box.className = "zhh_box";
+                zhh_box.textContent = zhh_i;
+            }
+            zhh_grid.appendChild(zhh_box);
+        }
+
+        // 统计数量
+        document.getElementById("zhh_hit_num").textContent = zhh_hit;
+        document.getElementById("zhh_ok_num").textContent = 100 - zhh_hit;
+        console.log("空盒子（数七）数量：" + zhh_hit + "，显示数字数量：" + (100 - zhh_hit));
+    </script>
+</body>
+</html>

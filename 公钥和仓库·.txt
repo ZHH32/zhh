@@ -1,0 +1,5 @@
+公钥：ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBn+chHi3EptRoqD63xTr5tOrzVoHQhudNA58x1Be5g gitee
+仓库:https://gitee.com/zhang-huaihao/zhh_html.git
+
+Github仓库地址：https://github.com/ZHH32/zhh.git
+创建skill：提交Github，commit和push整个项目到https://github.com/ZHH32/zhh.git
