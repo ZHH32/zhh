@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript程序结构 · 循环与条件</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 960px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 32px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_loop2 { border-top-color: #10b981; }
+        .zhh_c_if    { border-top-color: #f59e0b; }
+        .zhh_c_switch{ border-top-color: #ec4899; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            background: #6366f1;
+        }
+        .zhh_tag_loop2 { background: #10b981; }
+        .zhh_tag_if    { background: #f59e0b; }
+        .zhh_tag_switch{ background: #ec4899; }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .zhh_input {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 110px;
+            outline: none;
+        }
+        .zhh_input:focus { border-color: #6366f1; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-size: 14px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .zhh_btn:hover { opacity: .88; }
+        .zhh_btn_loop2 { background: #10b981; }
+        .zhh_btn_if    { background: #f59e0b; }
+        .zhh_btn_switch{ background: #ec4899; }
+        .zhh_res {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 40px;
+            line-height: 1.8;
+        }
+        .zhh_res b { color: #6366f1; font-family: Consolas, monospace; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-26，使用的大模型：GLM-5.3-Flash，功能名称：JavaScript程序结构循环与条件 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JavaScript 程序结构 · 循环与条件</h1>
+            <p>张淮皓的JavaScript · 点击按钮运行演示</p>
+        </div>
+
+        <div class="zhh_grid">
+            <div class="zhh_card">
+                <span class="zhh_tag">循环结构</span>
+                <h3>for 循环</h3>
+                <div class="zhh_code">var zhh_sum = 0;
+for (var zhh_i = 1; zhh_i <= 100; zhh_i++) {
+    zhh_sum += zhh_i;
+}</div>
+                <button class="zhh_btn" onclick="zhh_runFor()">计算 1+2+…+100</button>
+                <div class="zhh_res" id="zhh_res_for">点击按钮运行 for 循环</div>
+            </div>
+
+            <div class="zhh_card zhh_c_loop2">
+                <span class="zhh_tag zhh_tag_loop2">循环结构</span>
+                <h3>while 循环</h3>
+                <div class="zhh_code">var zhh_j = 1, zhh_fac = 1;
+while (zhh_j <= 10) {
+    zhh_fac *= zhh_j;
+    zhh_j++;
+}</div>
+                <button class="zhh_btn zhh_btn_loop2" onclick="zhh_runWhile()">计算 10 的阶乘</button>
+                <div class="zhh_res" id="zhh_res_while">点击按钮运行 while 循环</div>
+            </div>
+
+            <div class="zhh_card zhh_c_if">
+                <span class="zhh_tag zhh_tag_if">条件结构</span>
+                <h3>if / else if / else</h3>
+                <div class="zhh_code">if (zhh_score >= 90)       → 优秀
+else if (zhh_score >= 80)  → 良好
+else if (zhh_score >= 60)  → 及格
+else                       → 不及格</div>
+                <input class="zhh_input" type="number" id="zhh_input_score" placeholder="输入分数">
+                <button class="zhh_btn zhh_btn_if" onclick="zhh_runIf()">判断等级</button>
+                <div class="zhh_res" id="zhh_res_if">输入 0~100 的分数后点击按钮</div>
+            </div>
+
+            <div class="zhh_card zhh_c_switch">
+                <span class="zhh_tag zhh_tag_switch">条件结构</span>
+                <h3>switch / case</h3>
+                <div class="zhh_code">switch (zhh_day) {
+    case 1: zhh_name = "星期一"; break;
+    ...
+    default: zhh_name = "输入无效";
+}</div>
+                <input class="zhh_input" type="number" id="zhh_input_day" placeholder="输入 1~7">
+                <button class="zhh_btn zhh_btn_switch" onclick="zhh_runSwitch()">查询星期</button>
+                <div class="zhh_res" id="zhh_res_switch">输入数字 1~7 后点击按钮</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // for 循环：1+2+…+100
+        function zhh_runFor() {
+            var zhh_sum = 0;
+            for (var zhh_i = 1; zhh_i <= 100; zhh_i++) {
+                zhh_sum += zhh_i;
+            }
+            document.getElementById("zhh_res_for").innerHTML =
+                "1+2+…+100 = <b>" + zhh_sum + "</b>（循环执行了 100 次）";
+            console.log("for 循环结果：" + zhh_sum);
+        }
+
+        // while 循环：10 的阶乘
+        function zhh_runWhile() {
+            var zhh_j = 1, zhh_fac = 1;
+            while (zhh_j <= 10) {
+                zhh_fac *= zhh_j;
+                zhh_j++;
+            }
+            document.getElementById("zhh_res_while").innerHTML =
+                "10! = 1×2×…×10 = <b>" + zhh_fac + "</b>（循环执行了 10 次）";
+            console.log("while 循环结果：" + zhh_fac);
+        }
+
+        // if / else if / else：分数定等级
+        function zhh_runIf() {
+            var zhh_score = Number(document.getElementById("zhh_input_score").value);
+            var zhh_level;
+            if (zhh_score >= 90) {
+                zhh_level = "优秀";
+            } else if (zhh_score >= 80) {
+                zhh_level = "良好";
+            } else if (zhh_score >= 60) {
+                zhh_level = "及格";
+            } else {
+                zhh_level = "不及格";
+            }
+            document.getElementById("zhh_res_if").innerHTML =
+                "分数 <b>" + zhh_score + "</b> 的等级是：<b>" + zhh_level + "</b>";
+            console.log("if 判断结果：" + zhh_score + " → " + zhh_level);
+        }
+
+        // switch / case：数字查星期
+        function zhh_runSwitch() {
+            var zhh_day = Number(document.getElementById("zhh_input_day").value);
+            var zhh_name;
+            switch (zhh_day) {
+                case 1: zhh_name = "星期一"; break;
+                case 2: zhh_name = "星期二"; break;
+                case 3: zhh_name = "星期三"; break;
+                case 4: zhh_name = "星期四"; break;
+                case 5: zhh_name = "星期五"; break;
+                case 6: zhh_name = "星期六"; break;
+                case 7: zhh_name = "星期日"; break;
+                default: zhh_name = "输入无效，请输入 1~7";
+            }
+            document.getElementById("zhh_res_switch").innerHTML =
+                "输入 <b>" + zhh_day + "</b> → <b>" + zhh_name + "</b>";
+            console.log("switch 判断结果：" + zhh_day + " → " + zhh_name);
+        }
+    </script>
+</body>
+</html>
