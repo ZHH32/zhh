@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-4 页签切换排行榜</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f5f6f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 50px 16px;
+            color: #333;
+        }
+        .zhh_box { width: 480px; }
+
+        /* 页签栏 */
+        .zhh_tabs { display: flex; }
+        .zhh_tab {
+            flex: 1;
+            background: #fff;
+            border: 1px solid #333;
+            margin-left: -1px;
+            padding: 9px 0 8px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+            transition: background .2s, color .2s;
+        }
+        .zhh_tab:first-child { margin-left: 0; }
+        .zhh_tab:hover { color: #e53e30; }
+        .zhh_tab.zhh_on {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+            position: relative;
+            z-index: 1;
+        }
+        .zhh_tab.zhh_on:hover { color: #fff; }
+
+        /* 榜单面板：与页签栏连为一体（无间距、无顶边框） */
+        .zhh_panel {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-top: none;
+            padding: 12px 18px;
+            display: flex;
+            opacity: 1;
+            transition: opacity .25s;
+        }
+        .zhh_panel.zhh_fading { opacity: 0; }
+        .zhh_col { flex: 1; min-width: 0; }
+        .zhh_col:first-child { margin-right: 22px; }
+        .zhh_item {
+            display: flex;
+            align-items: center;
+            padding: 7px 2px;
+            border-bottom: 1px dashed #f0f0f0;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .zhh_col .zhh_item:last-child { border-bottom: none; }
+        .zhh_item:hover { background: #fafafa; }
+
+        /* 序号：小方块徽章，前三名红底白字，4~10 灰底 */
+        .zhh_no {
+            width: 20px;
+            flex: none;
+            font-size: 14px;
+            font-weight: 700;
+            font-style: italic;
+            text-align: center;
+            line-height: 20px;
+            color: #b0b0b0;
+            background: #f2f2f2;
+            border-radius: 3px;
+        }
+        .zhh_no.zhh_no1, .zhh_no.zhh_no2, .zhh_no.zhh_no3 { color: #fff; background: #e53e30; }
+        .zhh_title {
+            margin-left: 10px;
+            font-size: 14px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        .zhh_item:hover .zhh_title { color: #e53e30; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-29，使用的大模型：GLM-5.3-Flash，功能名称：页签切换排行榜 -->
+    <div class="zhh_box">
+        <div class="zhh_tabs" id="zhh_tabs">
+            <div class="zhh_tab zhh_on" onclick="zhh_switchTab(this, 'zhh_day')">每日</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_week')">每周</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_month')">每月</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_all')">全部</div>
+        </div>
+        <div class="zhh_panel" id="zhh_panel"></div>
+    </div>
+
+    <script>
+        // 四个页签对应的榜单数据（1~10 名）
+        var zhh_data = {
+            zhh_day: ["最美的时光", "咱们结婚吧", "渗透", "继承者们", "烽火佳人",
+                      "极品女士第2季", "爱闪亮", "狼烟（2013）", "钱多多炼爱记", "苍狼"],
+            zhh_week: ["咱们结婚吧", "继承者们", "最美的时光", "爱闪亮", "渗透",
+                       "狼烟（2013）", "三十岁，你好", "钱多多炼爱记", "特种兵之火凤凰", "极品女士第2季"],
+            zhh_month: ["特种兵之火凤凰", "咱们结婚吧", "继承者们", "金玉满堂", "王的女人",
+                        "爱闪亮", "爱情面前谁怕谁", "英雄联盟", "小爸爸", "我们这拨人"],
+            zhh_all: ["永不磨灭的番号", "特种兵之火凤凰", "新还珠格格", "咱们结婚吧", "小爸爸",
+                      "心术", "乡村爱情5", "天天有喜", "一不小心爱上你", "夏日甜心"]
+        };
+
+        // 生成单个条目：序号 + 片名，严格按 1~3 彩色、4~10 灰底
+        function zhh_makeItem(zhh_rank, zhh_name) {
+            var zhh_cls = "zhh_no";
+            if (zhh_rank === 1) { zhh_cls = "zhh_no zhh_no1"; }
+            else if (zhh_rank === 2) { zhh_cls = "zhh_no zhh_no2"; }
+            else if (zhh_rank === 3) { zhh_cls = "zhh_no zhh_no3"; }
+            return '<div class="zhh_item">'
+                 + '<span class="' + zhh_cls + '">' + zhh_rank + '</span>'
+                 + '<span class="zhh_title">' + zhh_name + '</span>'
+                 + '</div>';
+        }
+
+        // 渲染榜单：左侧从上到下 1~5，右侧从上到下 6~10
+        function zhh_render(zhh_key) {
+            var zhh_list = zhh_data[zhh_key];
+            var zhh_left = "", zhh_right = "";
+            for (var zhh_i = 0; zhh_i < 5; zhh_i++) {
+                zhh_left += zhh_makeItem(zhh_i + 1, zhh_list[zhh_i]);
+                zhh_right += zhh_makeItem(zhh_i + 6, zhh_list[zhh_i + 5]);
+            }
+            document.getElementById("zhh_panel").innerHTML =
+                '<div class="zhh_col">' + zhh_left + '</div>'
+              + '<div class="zhh_col">' + zhh_right + '</div>';
+        }
+
+        // 点击页签：切换高亮并淡入对应内容
+        function zhh_switchTab(zhh_el, zhh_key) {
+            var zhh_tabList = document.getElementById("zhh_tabs").children;
+            for (var zhh_i = 0; zhh_i < zhh_tabList.length; zhh_i++) {
+                zhh_tabList[zhh_i].className = "zhh_tab";
+            }
+            zhh_el.className = "zhh_tab zhh_on";
+
+            var zhh_panel = document.getElementById("zhh_panel");
+            zhh_panel.classList.add("zhh_fading");
+            setTimeout(function () {
+                zhh_render(zhh_key);
+                zhh_panel.classList.remove("zhh_fading");
+            }, 250);
+        }
+
+        // 默认显示"每日"榜单
+        zhh_render("zhh_day");
+    </script>
+</body>
+</html>

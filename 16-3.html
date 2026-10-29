@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>翻译平台特价专区</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f3f3f3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* ===== 面板 ===== */
+        .zhh_panel {
+            width: 560px;
+            max-width: 100%;
+            background: #fff;
+            padding-bottom: 26px;
+            position: relative;
+        }
+
+        /* ===== 标题区 ===== */
+        .zhh_head {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 118px;
+            padding-left: 46px;
+        }
+        .zhh_bar {
+            position: absolute;
+            left: 0;
+            top: 34px;
+            width: 6px;
+            height: 48px;
+            background: #ff6159;
+        }
+        .zhh_globe {
+            width: 34px;
+            height: 34px;
+            color: #b8b8b8;
+            flex-shrink: 0;
+            margin-right: 14px;
+        }
+        .zhh_head h1 {
+            font-size: 29px;
+            font-weight: normal;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        /* ===== 列表 ===== */
+        .zhh_list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 26px;
+        }
+        .zhh_row {
+            display: flex;
+            align-items: center;
+            height: 104px;
+            padding: 0 24px 0 22px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            cursor: pointer;
+            transition: border-color .25s, background .25s, box-shadow .25s;
+        }
+        .zhh_row:hover {
+            border-color: #ffc9c6;
+            background: #fffafa;
+            box-shadow: 0 2px 10px rgba(255, 97, 89, .12);
+        }
+        .zhh_cart {
+            width: 40px;
+            height: 40px;
+            color: #f4685f;
+            flex-shrink: 0;
+            margin-right: 20px;
+            transition: transform .25s;
+        }
+        .zhh_row:hover .zhh_cart { transform: translateX(3px); }
+        .zhh_name {
+            font-size: 28px;
+            color: #333;
+            letter-spacing: 1px;
+        }
+        .zhh_count {
+            margin-left: auto;
+            font-size: 26px;
+            color: #555;
+            letter-spacing: 1px;
+        }
+        .zhh_count span { font-size: 22px; color: #666; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-29，使用的大模型：GLM-5.3-Flash，功能名称：翻译平台特价专区列表 -->
+    <div class="zhh_panel">
+        <!-- 标题：左侧红色竖条 + 地球图标 -->
+        <div class="zhh_head">
+            <span class="zhh_bar"></span>
+            <svg class="zhh_globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+                <circle cx="12" cy="12" r="9.2"></circle>
+                <ellipse cx="12" cy="12" rx="4.3" ry="9.2"></ellipse>
+                <path d="M3.2 8.4h17.6M3.2 15.6h17.6"></path>
+            </svg>
+            <h1>翻译平台特价专区</h1>
+        </div>
+
+        <!-- 三个特价专区入口 -->
+        <div class="zhh_list">
+            <div class="zhh_row">
+                <svg class="zhh_cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.4 3.4h2.2l2.4 10.2h10.6l2.2-7.4H6"></path>
+                    <circle cx="9.6" cy="18.4" r="1.5"></circle>
+                    <circle cx="17.2" cy="18.4" r="1.5"></circle>
+                </svg>
+                <span class="zhh_name">8折专区</span>
+                <span class="zhh_count">738<span> 篇</span></span>
+            </div>
+
+            <div class="zhh_row">
+                <svg class="zhh_cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.4 3.4h2.2l2.4 10.2h10.6l2.2-7.4H6"></path>
+                    <circle cx="9.6" cy="18.4" r="1.5"></circle>
+                    <circle cx="17.2" cy="18.4" r="1.5"></circle>
+                </svg>
+                <span class="zhh_name">5折专区</span>
+                <span class="zhh_count">977<span> 篇</span></span>
+            </div>
+
+            <div class="zhh_row">
+                <svg class="zhh_cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.4 3.4h2.2l2.4 10.2h10.6l2.2-7.4H6"></path>
+                    <circle cx="9.6" cy="18.4" r="1.5"></circle>
+                    <circle cx="17.2" cy="18.4" r="1.5"></circle>
+                </svg>
+                <span class="zhh_name">1龙币专区</span>
+                <span class="zhh_count">11420<span> 篇</span></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

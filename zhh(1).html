@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻侧边栏 · 财经板块</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f5f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        /* ===== 财经板块容器（红框标注区域） ===== */
+        .zhh_panel {
+            width: 320px;
+            background: #fff;
+            border: 2px solid #e0342b;
+            border-radius: 2px;
+            padding: 14px 16px 8px;
+        }
+        .zhh_panel_head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 10px;
+        }
+        .zhh_panel_head h2 {
+            font-size: 17px;
+            color: #222;
+            letter-spacing: 1px;
+        }
+        .zhh_panel_head .zhh_more {
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .zhh_panel_head .zhh_more:hover { color: #e0342b; }
+
+        /* ===== 头条大图卡 ===== */
+        .zhh_topcard {
+            position: relative;
+            display: block;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .zhh_topcard img {
+            display: block;
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            transition: transform .4s;
+        }
+        .zhh_topcard:hover img { transform: scale(1.05); }
+        .zhh_topcard .zhh_mask {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 30px 12px 10px;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.72) 70%);
+        }
+        .zhh_topcard .zhh_quote {
+            font-family: Georgia, serif;
+            font-size: 26px;
+            line-height: 1;
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: -3px;
+        }
+        .zhh_topcard .zhh_toptitle {
+            display: block;
+            margin-top: 2px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1.5;
+        }
+        .zhh_topcard:hover .zhh_toptitle {
+            text-decoration: underline;
+        }
+
+        /* ===== 列表区 ===== */
+        .zhh_list { list-style: none; padding: 6px 0 4px; }
+        .zhh_list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .zhh_list li:last-child { border-bottom: none; }
+        .zhh_list .zhh_mark {
+            font-size: 12px;
+            color: #e0342b;
+            line-height: 20px;
+            flex-shrink: 0;
+        }
+        .zhh_list .zhh_mark .iconfont { font-size: 12px; }
+        .zhh_list a {
+            font-size: 13.5px;
+            color: #444;
+            text-decoration: none;
+            line-height: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .zhh_list a:hover { color: #e0342b; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-29，使用的大模型：GLM-5.3-Flash，功能名称：新闻侧边栏财经板块 -->
+    <div class="zhh_panel">
+        <div class="zhh_panel_head">
+            <h2>财经</h2>
+            <span class="zhh_more">更多<span class="iconfont">&#xe61e;</span></span>
+        </div>
+
+        <a class="zhh_topcard" href="javascript:;">
+            <img src="img/6.png" alt="财经头条配图">
+            <div class="zhh_mask">
+                <span class="zhh_quote">“</span>
+                <span class="zhh_toptitle">对不起，我们不投具身智能了</span>
+            </div>
+        </a>
+
+        <ul class="zhh_list">
+            <li>
+                <span class="zhh_mark"><span class="iconfont">&#xe7c4;</span></span>
+                <a href="javascript:;">黄金：还没见顶</a>
+            </li>
+            <li>
+                <span class="zhh_mark"><span class="iconfont">&#xe7c4;</span></span>
+                <a href="javascript:;">沃勒释放鸽派信号 美联储12月政策路径再添变数</a>
+            </li>
+            <li>
+                <span class="zhh_mark"><span class="iconfont">&#xe7c4;</span></span>
+                <a href="javascript:;">报道：亚马逊科技即将收购光模块厂商</a>
+            </li>
+            <li>
+                <span class="zhh_mark"><span class="iconfont">&#xe7c4;</span></span>
+                <a href="javascript:;">新晋中国女首富，公司净利润腰斩！</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

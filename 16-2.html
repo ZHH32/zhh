@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 对象 · 形象演示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #fef3c7 0%, #eef2ff 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1000px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #f59e0b, #6366f1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        /* ===== 舞台：对象档案卡 ===== */
+        .zhh_stage {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #f59e0b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .zhh_stage h2 { font-size: 19px; margin-bottom: 6px; }
+        .zhh_stage > p { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+        .zhh_objcard {
+            display: inline-block;
+            text-align: left;
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 18px 24px;
+            min-width: 320px;
+            min-height: 150px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 2.1;
+            color: #374151;
+        }
+        .zhh_objcard .zhh_objname { color: #6366f1; font-weight: bold; }
+        .zhh_objcard .zhh_key { color: #059669; font-weight: bold; }
+        .zhh_objcard .zhh_val { color: #ec4899; font-weight: bold; }
+        .zhh_objcard .zhh_flash {
+            animation: zhh_flash .8s ease;
+            border-radius: 4px;
+        }
+        @keyframes zhh_flash {
+            0%   { background: #fde68a; transform: scale(1.12); }
+            100% { background: transparent; transform: scale(1); }
+        }
+        .zhh_result {
+            margin-top: 18px;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.9;
+            text-align: left;
+            min-height: 46px;
+        }
+        .zhh_result .zhh_code_run {
+            font-family: Consolas, monospace;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        .zhh_result b { color: #6366f1; font-family: Consolas, monospace; }
+
+        /* ===== 知识卡片 ===== */
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 520px) { .zhh_grid { grid-template-columns: 1fr; } }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #f59e0b;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_read  { border-top-color: #6366f1; }
+        .zhh_c_edit  { border-top-color: #10b981; }
+        .zhh_c_walk  { border-top-color: #ec4899; }
+        .zhh_c_tool  { border-top-color: #0ea5e9; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            background: #f59e0b;
+        }
+        .zhh_tag_read { background: #6366f1; }
+        .zhh_tag_edit { background: #10b981; }
+        .zhh_tag_walk { background: #ec4899; }
+        .zhh_tag_tool { background: #0ea5e9; }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .zhh_btns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #fff;
+            background: #f59e0b;
+            cursor: pointer;
+            font-family: Consolas, monospace;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_btn_read { background: #6366f1; }
+        .zhh_btn_edit { background: #10b981; }
+        .zhh_btn_walk { background: #ec4899; }
+        .zhh_btn_tool { background: #0ea5e9; }
+        .zhh_btn_warn { background: #9ca3af; margin-top: 14px; width: 100%; font-size: 14px; font-family: "Microsoft YaHei", sans-serif; }
+        .zhh_res {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 38px;
+            line-height: 1.8;
+        }
+        .zhh_res b { color: #f59e0b; font-family: Consolas, monospace; }
+        .zhh_card.zhh_c_read .zhh_res b { color: #6366f1; }
+        .zhh_card.zhh_c_edit .zhh_res b { color: #10b981; }
+        .zhh_card.zhh_c_walk .zhh_res b { color: #ec4899; }
+        .zhh_card.zhh_c_tool .zhh_res b { color: #0ea5e9; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-29，使用的大模型：GLM-5.3-Flash，功能名称：JavaScript 对象形象演示 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JavaScript 对象 · 形象演示</h1>
+            <p>张淮皓的JavaScript · 把对象想成一张「个人档案卡」，属性是卡片上的条目，方法是卡片主人会做的事</p>
+        </div>
+
+        <!-- 舞台：对象可视化 -->
+        <div class="zhh_stage">
+            <h2>对象档案卡 · 实时舞台</h2>
+            <p>下面这张卡片就是对象 zhh_person，每一行「属性名: 属性值」就是它的一个属性</p>
+            <div class="zhh_objcard" id="zhh_objcard"></div>
+            <div class="zhh_result" id="zhh_result">点击下方任意按钮，这里会显示执行的代码和结果</div>
+            <button class="zhh_btn zhh_btn_warn" onclick="zhh_reset()">重置对象回到初始状态</button>
+        </div>
+
+        <div class="zhh_grid">
+            <!-- 读取属性 -->
+            <div class="zhh_card zhh_c_read">
+                <span class="zhh_tag zhh_tag_read">读取属性</span>
+                <h3>点语法 / 中括号语法</h3>
+                <div class="zhh_code">zhh_person.name      → 点语法取值，最常用
+zhh_person["name"]   → 中括号语法，键名要加引号
+zhh_person.age       → 属性值也可以是数字</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_read" onclick="zhh_mDot()">zhh_person.name</button>
+                    <button class="zhh_btn zhh_btn_read" onclick="zhh_mBracket()">zhh_person["name"]</button>
+                    <button class="zhh_btn zhh_btn_read" onclick="zhh_mAge()">zhh_person.age</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_read">两种写法效果一样，中括号里可以放变量，点语法不行</div>
+            </div>
+
+            <!-- 增删改属性 -->
+            <div class="zhh_card zhh_c_edit">
+                <span class="zhh_tag zhh_tag_edit">增删改属性</span>
+                <h3>添加 / 修改 / delete</h3>
+                <div class="zhh_code">zhh_person.city = "北京" → 档案卡上新增一行
+zhh_person.age = 21      → 已有的条目直接改值
+delete zhh_person.city   → 把这一行从卡片上划掉</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_edit" onclick="zhh_mAdd()">添加 city</button>
+                    <button class="zhh_btn zhh_btn_edit" onclick="zhh_mEdit()">修改 age = 21</button>
+                    <button class="zhh_btn zhh_btn_edit" onclick="zhh_mDel()">delete city</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_edit">对象像一张可以随时涂改的档案卡，增删改都很自由</div>
+            </div>
+
+            <!-- 方法与 this -->
+            <div class="zhh_card zhh_c_walk">
+                <span class="zhh_tag zhh_tag_walk">方法与 this</span>
+                <h3>对象里的函数 · 方法</h3>
+                <div class="zhh_code">zhh_person.sayHi = function () {
+    return "大家好，我是" + this.name;
+}
+this 就代表「当前这张档案卡」自己</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_walk" onclick="zhh_mSayHi()">zhh_person.sayHi()</button>
+                    <button class="zhh_btn zhh_btn_walk" onclick="zhh_mBirthday()">zhh_person.birthday()</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_walk">方法就是对象里保存的函数，this 指向对象本身</div>
+            </div>
+
+            <!-- 遍历与工具 -->
+            <div class="zhh_card zhh_c_tool">
+                <span class="zhh_tag zhh_tag_tool">遍历与工具</span>
+                <h3>for...in / Object.keys / values</h3>
+                <div class="zhh_code">for (var zhh_k in zhh_person) { … } → 逐行念档案
+Object.keys(zhh_person)   → 拿到所有属性名的数组
+Object.values(zhh_person) → 拿到所有属性值的数组</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_tool" onclick="zhh_mForIn()">for...in 遍历</button>
+                    <button class="zhh_btn zhh_btn_tool" onclick="zhh_mKeys()">Object.keys</button>
+                    <button class="zhh_btn zhh_btn_tool" onclick="zhh_mValues()">Object.values</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_tool">for...in 一次拿到一个属性名，工具方法批量拿属性名或属性值</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始对象：一张个人档案卡
+        var zhh_personInit = { name: "张淮皓", age: 20, hobby: "打篮球" };
+        var zhh_person = {};
+
+        // 复制初始对象（浅拷贝即可，这里属性都是基本类型）
+        function zhh_copyInit() {
+            zhh_person = {};
+            for (var zhh_k in zhh_personInit) {
+                zhh_person[zhh_k] = zhh_personInit[zhh_k];
+            }
+        }
+
+        // 渲染对象档案卡
+        function zhh_render(zhh_flashKey) {
+            var zhh_card = document.getElementById("zhh_objcard");
+            var zhh_html = '<span class="zhh_objname">var zhh_person = {</span><br>';
+            for (var zhh_k in zhh_person) {
+                var zhh_v = zhh_person[zhh_k];
+                if (typeof zhh_v === "function") {
+                    zhh_v = "function () { … }";
+                } else if (typeof zhh_v === "string") {
+                    zhh_v = '"' + zhh_v + '"';
+                }
+                var zhh_cls = "zhh_key";
+                if (zhh_k === zhh_flashKey) { zhh_cls = "zhh_key zhh_flash"; }
+                zhh_html += '&nbsp;&nbsp;<span class="' + zhh_cls + '">' + zhh_k
+                    + '</span>: <span class="zhh_val">' + zhh_v + '</span>;<br>';
+            }
+            zhh_html += '<span class="zhh_objname">};</span>';
+            zhh_card.innerHTML = zhh_html;
+        }
+
+        // 在舞台下方显示执行代码与结果
+        function zhh_log(zhh_code, zhh_res) {
+            document.getElementById("zhh_result").innerHTML =
+                '执行：<span class="zhh_code_run">' + zhh_code + '</span><br>结果：<b>' + zhh_res + '</b>';
+        }
+
+        function zhh_show(zhh_id, zhh_html) {
+            document.getElementById(zhh_id).innerHTML = zhh_html;
+        }
+
+        // 重置
+        function zhh_reset() {
+            zhh_copyInit();
+            zhh_render();
+            zhh_log("zhh_person = { name: \"张淮皓\", age: 20, hobby: \"打篮球\" }", "对象已重置为初始状态");
+        }
+
+        /* ===== 读取属性 ===== */
+        function zhh_mDot() {
+            var zhh_v = zhh_person.name;
+            zhh_render("name");
+            zhh_log("zhh_person.name", "读到属性值 <b>" + zhh_v + "</b>，点语法像「档案卡.条目名」一样自然");
+            zhh_show("zhh_res_read", "点语法 <b>对象.属性名</b>，最常用的取值方式，属性名不需要引号");
+        }
+        function zhh_mBracket() {
+            var zhh_v = zhh_person["name"];
+            zhh_render("name");
+            zhh_log('zhh_person["name"]', "读到属性值 <b>" + zhh_v + "</b>，效果和点语法一样");
+            zhh_show("zhh_res_read", "中括号语法 <b>对象[\"属性名\"]</b>，键名要加引号，好处是键名可以存在<b>变量</b>里");
+        }
+        function zhh_mAge() {
+            var zhh_v = zhh_person.age;
+            zhh_render("age");
+            zhh_log("zhh_person.age", "读到属性值 <b>" + zhh_v + "</b>，数字类型的属性值不用加引号");
+            zhh_show("zhh_res_read", "属性值可以是<b>任意类型</b>：字符串、数字、数组，甚至另一个对象");
+        }
+
+        /* ===== 增删改属性 ===== */
+        function zhh_mAdd() {
+            zhh_person.city = "北京";
+            zhh_render("city");
+            zhh_log('zhh_person.city = "北京"', "档案卡上新增了一行 city: \"北京\"，对象本来没有这个属性，赋值即创建");
+            zhh_show("zhh_res_edit", "给<b>不存在的属性</b>赋值 = 新增；给<b>已存在的属性</b>赋值 = 修改");
+        }
+        function zhh_mEdit() {
+            if (zhh_person.age === undefined) { zhh_log("zhh_person.age = 21", "对象里没有 age 属性了，请先重置"); return; }
+            zhh_person.age = 21;
+            zhh_render("age");
+            zhh_log("zhh_person.age = 21", "age 的值从 " + zhh_personInit.age + " 改成了 <b>21</b>，旧值被覆盖");
+            zhh_show("zhh_res_edit", "修改就是重新赋值，<b>旧值被覆盖</b>，不会留下痕迹");
+        }
+        function zhh_mDel() {
+            if (zhh_person.city === undefined) { zhh_log("delete zhh_person.city", "对象里还没有 city 属性，先点「添加 city」再试删除"); return; }
+            delete zhh_person.city;
+            zhh_render();
+            zhh_log("delete zhh_person.city", "city 这一行被划掉了，再读它会得到 <b>undefined</b>");
+            zhh_show("zhh_res_edit", "delete 删除一个属性，删除后再访问会得到 <b>undefined</b>");
+        }
+
+        /* ===== 方法与 this ===== */
+        function zhh_mSayHi() {
+            zhh_person.sayHi = function () {
+                return "大家好，我是" + this.name + "，今年" + this.age + "岁，爱好是" + this.hobby;
+            };
+            var zhh_v = zhh_person.sayHi();
+            zhh_render("sayHi");
+            zhh_log("zhh_person.sayHi()", "方法执行后返回：<b>" + zhh_v + "</b>");
+            zhh_show("zhh_res_walk", "属性值是函数时叫<b>方法</b>，调用要加括号；方法里的 <b>this</b> 就是这张档案卡自己");
+        }
+        function zhh_mBirthday() {
+            if (zhh_person.age === undefined) { zhh_log("zhh_person.birthday()", "对象里没有 age 属性了，请先重置"); return; }
+            zhh_person.birthday = function () {
+                this.age = this.age + 1;
+                return this.name + "过生日啦！现在" + this.age + "岁";
+            };
+            var zhh_v = zhh_person.birthday();
+            zhh_render("age");
+            zhh_log("zhh_person.birthday()", "方法执行后返回：<b>" + zhh_v + "</b>，卡片上的 age 也同步变了");
+            zhh_show("zhh_res_walk", "方法可以通过 <b>this</b> 读取并修改自己的其他属性，这就是对象「数据 + 行为」的组合");
+        }
+
+        /* ===== 遍历与工具 ===== */
+        function zhh_mForIn() {
+            var zhh_out = [];
+            for (var zhh_k in zhh_person) {
+                if (typeof zhh_person[zhh_k] === "function") { continue; }
+                zhh_out.push("属性名 " + zhh_k + " → 属性值 " + zhh_person[zhh_k]);
+            }
+            zhh_render();
+            zhh_log("for (var zhh_k in zhh_person) { … }", zhh_out.join("；"));
+            zhh_show("zhh_res_tool", "for...in 每轮把一个<b>属性名</b>交给循环变量，配合中括号即可取到对应的值");
+        }
+        function zhh_mKeys() {
+            var zhh_ks = Object.keys(zhh_person).filter(function (zhh_k) {
+                return typeof zhh_person[zhh_k] !== "function";
+            });
+            zhh_render();
+            zhh_log("Object.keys(zhh_person)", "[" + zhh_ks.map(function (zhh_k) { return '"' + zhh_k + '"'; }).join(", ") + "]");
+            zhh_show("zhh_res_tool", "Object.keys 把所有属性名收集成一个<b>数组</b>，方便统计和遍历");
+        }
+        function zhh_mValues() {
+            var zhh_vs = [];
+            for (var zhh_k in zhh_person) {
+                if (typeof zhh_person[zhh_k] === "function") { continue; }
+                zhh_vs.push(zhh_person[zhh_k]);
+            }
+            zhh_render();
+            zhh_log("Object.values(zhh_person)", "[" + zhh_vs.map(function (zhh_v) {
+                return typeof zhh_v === "string" ? '"' + zhh_v + '"' : zhh_v;
+            }).join(", ") + "]");
+            zhh_show("zhh_res_tool", "Object.values 把所有属性值收集成一个<b>数组</b>，与 Object.keys 是一对好搭档");
+        }
+
+        zhh_copyInit();
+        zhh_render();
+    </script>
+</body>
+</html>

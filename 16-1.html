@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数组常用方法 · 形象演示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1000px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        /* ===== 舞台：数组小火车 ===== */
+        .zhh_stage {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .zhh_stage h2 { font-size: 19px; margin-bottom: 6px; }
+        .zhh_stage > p { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+        .zhh_track {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            min-height: 96px;
+            padding: 14px;
+            background: repeating-linear-gradient(90deg, #f3f4f6 0 34px, #e5e7eb 34px 36px);
+            border-radius: 12px;
+        }
+        .zhh_box {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(31, 41, 55, .18);
+            animation: zhh_pop .45s ease;
+            position: relative;
+        }
+        .zhh_box small {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -22px;
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: normal;
+        }
+        .zhh_idx { font-size: 11px; color: #9ca3af; display: block; margin-top: 20px; }
+        @keyframes zhh_pop {
+            0%   { transform: scale(.3) translateY(-14px); opacity: 0; }
+            70%  { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .zhh_gap { font-size: 22px; color: #6366f1; font-weight: bold; }
+        .zhh_result {
+            margin-top: 18px;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.9;
+            text-align: left;
+            min-height: 46px;
+        }
+        .zhh_result .zhh_code_run {
+            font-family: Consolas, monospace;
+            color: #6366f1;
+            font-weight: bold;
+        }
+        .zhh_result b { color: #ec4899; font-family: Consolas, monospace; }
+
+        /* ===== 方法卡片 ===== */
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 520px) { .zhh_grid { grid-template-columns: 1fr; } }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_cut   { border-top-color: #10b981; }
+        .zhh_c_sort  { border-top-color: #f59e0b; }
+        .zhh_c_high  { border-top-color: #ec4899; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            background: #6366f1;
+        }
+        .zhh_tag_cut  { background: #10b981; }
+        .zhh_tag_sort { background: #f59e0b; }
+        .zhh_tag_high { background: #ec4899; }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .zhh_btns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: Consolas, monospace;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_btn_cut  { background: #10b981; }
+        .zhh_btn_sort { background: #f59e0b; }
+        .zhh_btn_high { background: #ec4899; }
+        .zhh_btn_warn { background: #9ca3af; margin-top: 14px; width: 100%; font-size: 14px; font-family: "Microsoft YaHei", sans-serif; }
+        .zhh_res {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 38px;
+            line-height: 1.8;
+        }
+        .zhh_res b { color: #6366f1; font-family: Consolas, monospace; }
+        .zhh_card.zhh_c_cut  .zhh_res b { color: #10b981; }
+        .zhh_card.zhh_c_sort .zhh_res b { color: #f59e0b; }
+        .zhh_card.zhh_c_high .zhh_res b { color: #ec4899; }
+
+        /* 数字数组演示（高阶方法用） */
+        .zhh_numtrack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .zhh_num {
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: #fce7f3;
+            color: #be185d;
+            font-family: Consolas, monospace;
+            font-weight: bold;
+            animation: zhh_pop .45s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-10-29，使用的大模型：GLM-5.3-Flash，功能名称：JavaScript 数组常用方法形象演示 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JavaScript 数组常用方法 · 形象演示</h1>
+            <p>张淮皓的JavaScript · 把数组想成一列火车，每节车厢是一个元素，点击按钮看它们如何上客、下车与整队</p>
+        </div>
+
+        <!-- 舞台：数组可视化 -->
+        <div class="zhh_stage">
+            <h2>数组小火车 · 实时舞台</h2>
+            <p>下面每一节「车厢」就是数组的一个元素，车厢号就是下标（从 0 开始）</p>
+            <div class="zhh_track" id="zhh_track"></div>
+            <div class="zhh_result" id="zhh_result">点击下方任意方法按钮，这里会显示执行的代码和结果</div>
+            <button class="zhh_btn zhh_btn_warn" onclick="zhh_reset()">重置数组回到初始状态</button>
+        </div>
+
+        <div class="zhh_grid">
+            <!-- 增删元素 -->
+            <div class="zhh_card">
+                <span class="zhh_tag">增删元素</span>
+                <h3>push / pop / unshift / shift</h3>
+                <div class="zhh_code">zhh_arr.push("菠萝")   → 车尾加一节车厢
+zhh_arr.pop()          → 车尾摘掉一节车厢
+zhh_arr.unshift("草莓") → 车头加一节车厢
+zhh_arr.shift()        → 车头摘掉一节车厢</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn" onclick="zhh_mPush()">push("菠萝")</button>
+                    <button class="zhh_btn" onclick="zhh_mPop()">pop()</button>
+                    <button class="zhh_btn" onclick="zhh_mUnshift()">unshift("草莓")</button>
+                    <button class="zhh_btn" onclick="zhh_mShift()">shift()</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_add">从车尾或车头增加、删除元素，都会直接改变原数组</div>
+            </div>
+
+            <!-- 查找与截取 -->
+            <div class="zhh_card zhh_c_cut">
+                <span class="zhh_tag zhh_tag_cut">查找与截取</span>
+                <h3>indexOf / includes / slice / splice</h3>
+                <div class="zhh_code">zhh_arr.indexOf("香蕉")  → 找下标，找不到返回 -1
+zhh_arr.includes("西瓜") → 是否存在，返回 true/false
+zhh_arr.slice(1, 3)      → 复制一段，原数组不变
+zhh_arr.splice(1, 1)     → 从下标1删除，原数组改变</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_cut" onclick="zhh_mIndexOf()">indexOf("香蕉")</button>
+                    <button class="zhh_btn zhh_btn_cut" onclick="zhh_mIncludes()">includes("西瓜")</button>
+                    <button class="zhh_btn zhh_btn_cut" onclick="zhh_mSlice()">slice(1, 3)</button>
+                    <button class="zhh_btn zhh_btn_cut" onclick="zhh_mSplice()">splice(1, 1)</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_find">slice 像「复印」，splice 像「剪断」</div>
+            </div>
+
+            <!-- 排序与转换 -->
+            <div class="zhh_card zhh_c_sort">
+                <span class="zhh_tag zhh_tag_sort">排序与转换</span>
+                <h3>join / reverse / sort</h3>
+                <div class="zhh_code">zhh_arr.join(" → ") → 把数组拼成一串文字
+zhh_arr.reverse()   → 整列火车掉头
+zhh_arr.sort()      → 按默认顺序排队</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_sort" onclick="zhh_mJoin()">join(" → ")</button>
+                    <button class="zhh_btn zhh_btn_sort" onclick="zhh_mReverse()">reverse()</button>
+                    <button class="zhh_btn zhh_btn_sort" onclick="zhh_mSort()">sort()</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_sort">join 只生成字符串不改变数组，reverse 和 sort 会改变原数组</div>
+            </div>
+
+            <!-- 高阶方法 -->
+            <div class="zhh_card zhh_c_high">
+                <span class="zhh_tag zhh_tag_high">高阶方法</span>
+                <h3>forEach / map / filter / reduce</h3>
+                <div class="zhh_code">var zhh_nums = [3, 8, 12, 5, 20];
+forEach → 逐个报数（遍历一遍）
+map     → 每个数都 ×2，得到新数组
+filter  → 挑出大于 9 的数
+reduce  → 把所有数加成一个总和</div>
+                <div class="zhh_numtrack" id="zhh_numtrack"></div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_high" onclick="zhh_mForEach()">forEach</button>
+                    <button class="zhh_btn zhh_btn_high" onclick="zhh_mMap()">map(×2)</button>
+                    <button class="zhh_btn zhh_btn_high" onclick="zhh_mFilter()">filter(&gt;9)</button>
+                    <button class="zhh_btn zhh_btn_high" onclick="zhh_mReduce()">reduce(求和)</button>
+                </div>
+                <div class="zhh_res" id="zhh_res_high">这些方法都不会改变原数组，map / filter 会返回新数组</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var zhh_arrInit = ["苹果", "香蕉", "葡萄", "西瓜"];
+        var zhh_arr = zhh_arrInit.slice();
+        var zhh_colors = ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#0ea5e9", "#8b5cf6", "#ef4444", "#14b8a6"];
+        var zhh_numsInit = [3, 8, 12, 5, 20];
+        var zhh_nums = zhh_numsInit.slice();
+
+        // 渲染数组小火车
+        function zhh_render() {
+            var zhh_track = document.getElementById("zhh_track");
+            var zhh_html = '<span class="zhh_box" style="background:#334155">车头</span>';
+            for (var zhh_i = 0; zhh_i < zhh_arr.length; zhh_i++) {
+                zhh_html += '<span class="zhh_gap">—</span>';
+                zhh_html += '<span class="zhh_box" style="background:' + zhh_colors[zhh_i % zhh_colors.length] + '">'
+                    + zhh_arr[zhh_i] + '<small>下标 ' + zhh_i + '</small></span>';
+            }
+            if (zhh_arr.length === 0) {
+                zhh_html += '<span class="zhh_gap">（车厢全空了，快 push 几节回来）</span>';
+            }
+            zhh_track.innerHTML = zhh_html;
+        }
+
+        // 在舞台下方显示执行代码与结果
+        function zhh_log(zhh_code, zhh_res) {
+            document.getElementById("zhh_result").innerHTML =
+                '执行：<span class="zhh_code_run">' + zhh_code + '</span><br>结果：<b>' + zhh_res + '</b>';
+        }
+
+        function zhh_show(zhh_id, zhh_html) {
+            document.getElementById(zhh_id).innerHTML = zhh_html;
+        }
+
+        // 重置
+        function zhh_reset() {
+            zhh_arr = zhh_arrInit.slice();
+            zhh_nums = zhh_numsInit.slice();
+            zhh_render();
+            zhh_renderNums();
+            zhh_log("zhh_arr = [\"苹果\", \"香蕉\", \"葡萄\", \"西瓜\"]", "数组已重置为初始状态");
+        }
+
+        /* ===== 增删元素 ===== */
+        function zhh_mPush() {
+            zhh_arr.push("菠萝");
+            zhh_render();
+            zhh_log('zhh_arr.push("菠萝")', "车尾加了一节「菠萝」车厢，现在长度是 " + zhh_arr.length);
+            zhh_show("zhh_res_add", "push 把新元素放到<b>末尾</b>，并返回新长度，原数组被改变");
+        }
+        function zhh_mPop() {
+            if (zhh_arr.length === 0) { zhh_log("zhh_arr.pop()", "数组已经空了，pop 没有东西可删，返回 undefined"); return; }
+            var zhh_gone = zhh_arr.pop();
+            zhh_render();
+            zhh_log("zhh_arr.pop()", "车尾的「" + zhh_gone + "」下车了，返回被删除的元素");
+            zhh_show("zhh_res_add", "pop 删除并返回<b>最后一个</b>元素，原数组被改变");
+        }
+        function zhh_mUnshift() {
+            zhh_arr.unshift("草莓");
+            zhh_render();
+            zhh_log('zhh_arr.unshift("草莓")', "车头加了一节「草莓」车厢，注意后面所有下标都变了");
+            zhh_show("zhh_res_add", "unshift 把新元素放到<b>开头</b>，后面元素的下标全部 +1");
+        }
+        function zhh_mShift() {
+            if (zhh_arr.length === 0) { zhh_log("zhh_arr.shift()", "数组已经空了，shift 没有东西可删，返回 undefined"); return; }
+            var zhh_gone = zhh_arr.shift();
+            zhh_render();
+            zhh_log("zhh_arr.shift()", "车头的「" + zhh_gone + "」下车了，后面元素整体前移");
+            zhh_show("zhh_res_add", "shift 删除并返回<b>第一个</b>元素，后面元素下标全部 -1");
+        }
+
+        /* ===== 查找与截取 ===== */
+        function zhh_mIndexOf() {
+            var zhh_idx = zhh_arr.indexOf("香蕉");
+            zhh_render();
+            zhh_log('zhh_arr.indexOf("香蕉")', zhh_idx === -1 ? "没找到「香蕉」，返回 -1" : "找到了！「香蕉」在下标 " + zhh_idx);
+            zhh_show("zhh_res_find", "indexOf 返回元素<b>第一次出现</b>的下标，找不到返回 <b>-1</b>");
+        }
+        function zhh_mIncludes() {
+            var zhh_has = zhh_arr.includes("西瓜");
+            zhh_render();
+            zhh_log('zhh_arr.includes("西瓜")', "返回 <b>" + zhh_has + "</b>（" + (zhh_has ? "车上有西瓜" : "车上没有西瓜") + "）");
+            zhh_show("zhh_res_find", "includes 只回答<b>有没有</b>，不关心位置，返回 true / false");
+        }
+        function zhh_mSlice() {
+            var zhh_part = zhh_arr.slice(1, 3);
+            zhh_render();
+            zhh_log("zhh_arr.slice(1, 3)", "复制出 [" + zhh_part.join(", ") + "]，原数组仍是 [" + zhh_arr.join(", ") + "]");
+            zhh_show("zhh_res_find", "slice(起, 止) 是「<b>复印</b>」一段（不含止），返回新数组，<b>原数组不变</b>");
+        }
+        function zhh_mSplice() {
+            if (zhh_arr.length === 0) { zhh_log("zhh_arr.splice(1, 1)", "数组已空，splice 无处下手"); return; }
+            var zhh_cut = zhh_arr.splice(1, 1);
+            zhh_render();
+            zhh_log("zhh_arr.splice(1, 1)", "从下标 1 剪掉 [" + zhh_cut.join(", ") + "]，原数组变成 [" + zhh_arr.join(", ") + "]");
+            zhh_show("zhh_res_find", "splice(起, 个数) 是「<b>剪断</b>」，直接修改原数组并返回被剪掉的部分");
+        }
+
+        /* ===== 排序与转换 ===== */
+        function zhh_mJoin() {
+            var zhh_str = zhh_arr.join(" → ");
+            zhh_render();
+            zhh_log('zhh_arr.join(" → ")', '"' + zhh_str + '"');
+            zhh_show("zhh_res_sort", "join 把数组<b>拼成字符串</b>，原数组不变");
+        }
+        function zhh_mReverse() {
+            zhh_arr.reverse();
+            zhh_render();
+            zhh_log("zhh_arr.reverse()", "整列火车掉头，现在是 [" + zhh_arr.join(", ") + "]");
+            zhh_show("zhh_res_sort", "reverse 颠倒元素顺序，<b>改变原数组</b>");
+        }
+        function zhh_mSort() {
+            zhh_arr.sort();
+            zhh_render();
+            zhh_log("zhh_arr.sort()", "排队完成，现在是 [" + zhh_arr.join(", ") + "]");
+            zhh_show("zhh_res_sort", "sort 按默认顺序（字符串比较）排序，<b>改变原数组</b>；数字排序要传入比较函数");
+        }
+
+        /* ===== 高阶方法（数字数组） ===== */
+        function zhh_renderNums() {
+            var zhh_html = "";
+            for (var zhh_i = 0; zhh_i < zhh_nums.length; zhh_i++) {
+                zhh_html += '<span class="zhh_num">' + zhh_nums[zhh_i] + '</span>';
+            }
+            document.getElementById("zhh_numtrack").innerHTML = zhh_html;
+        }
+
+        function zhh_mForEach() {
+            var zhh_out = [];
+            zhh_nums.forEach(function (zhh_n, zhh_i) {
+                zhh_out.push("第" + (zhh_i + 1) + "个是" + zhh_n);
+            });
+            zhh_renderNums();
+            zhh_log("zhh_nums.forEach(function(zhh_n, zhh_i) { … })", zhh_out.join("；"));
+            zhh_show("zhh_res_high", "forEach 逐个访问元素做事情，<b>没有返回值</b>，原数组不变");
+        }
+        function zhh_mMap() {
+            var zhh_doubled = zhh_nums.map(function (zhh_n) { return zhh_n * 2; });
+            zhh_log("zhh_nums.map(zhh_n => zhh_n * 2)", "[" + zhh_nums.join(", ") + "] → [" + zhh_doubled.join(", ") + "]");
+            zhh_show("zhh_res_high", "map 对每个元素加工后组成<b>新数组</b>返回，原数组仍是 [" + zhh_nums.join(", ") + "]");
+        }
+        function zhh_mFilter() {
+            var zhh_big = zhh_nums.filter(function (zhh_n) { return zhh_n > 9; });
+            zhh_log("zhh_nums.filter(zhh_n => zhh_n > 9)", "从 [" + zhh_nums.join(", ") + "] 中挑出 [" + zhh_big.join(", ") + "]");
+            zhh_show("zhh_res_high", "filter 只留下让条件为 true 的元素，返回<b>新数组</b>，原数组不变");
+        }
+        function zhh_mReduce() {
+            var zhh_sum = zhh_nums.reduce(function (zhh_acc, zhh_n) { return zhh_acc + zhh_n; }, 0);
+            zhh_log("zhh_nums.reduce((zhh_acc, zhh_n) => zhh_acc + zhh_n, 0)", "3 + 8 + 12 + 5 + 20 = <b>" + zhh_sum + "</b>");
+            zhh_show("zhh_res_high", "reduce 把数组从左到右「滚雪球」汇总成<b>一个值</b>，原数组不变");
+        }
+
+        zhh_render();
+        zhh_renderNums();
+    </script>
+</body>
+</html>
