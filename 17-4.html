@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接口测试工具 · fetch GET/POST</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 36px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1080px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 22px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            margin-bottom: 18px;
+        }
+        .zhh_card h2 { font-size: 17px; margin-bottom: 14px; color: #374151; }
+
+        /* 请求行 */
+        .zhh_row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .zhh_method {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 9px 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #6366f1;
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+        }
+        .zhh_url {
+            flex: 1;
+            min-width: 240px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            font-family: Consolas, monospace;
+            outline: none;
+        }
+        .zhh_url:focus, .zhh_method:focus { border-color: #6366f1; }
+        .zhh_send {
+            border: none;
+            border-radius: 8px;
+            padding: 9px 24px;
+            font-size: 15px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_send:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_send:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+        /* 预设 */
+        .zhh_presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .zhh_pre {
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: #4b5563;
+            cursor: pointer;
+            font-family: Consolas, monospace;
+        }
+        .zhh_pre:hover { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
+
+        /* 请求头 / 请求体 */
+        .zhh_sub { margin-top: 16px; }
+        .zhh_sub h3 { font-size: 14px; color: #6b7280; margin-bottom: 8px; }
+        .zhh_headers { display: flex; flex-direction: column; gap: 8px; }
+        .zhh_hrow { display: flex; gap: 8px; }
+        .zhh_hrow input {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 7px 10px;
+            font-size: 13px;
+            font-family: Consolas, monospace;
+            outline: none;
+        }
+        .zhh_hrow .zhh_hk { flex: 1; }
+        .zhh_hrow .zhh_hv { flex: 2; }
+        .zhh_hrow input:focus { border-color: #6366f1; }
+        .zhh_hdel {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 6px;
+            width: 34px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .zhh_addh {
+            border: 1px dashed #cbd5e1;
+            background: #fff;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #6b7280;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .zhh_addh:hover { border-color: #6366f1; color: #6366f1; }
+        .zhh_body {
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: #1f2937;
+            resize: vertical;
+            outline: none;
+            line-height: 1.7;
+        }
+        .zhh_body:focus { border-color: #6366f1; }
+        .zhh_body:disabled { background: #f3f4f6; color: #9ca3af; }
+
+        /* 请求预览（生成的 fetch 调用） */
+        .zhh_preview {
+            margin-top: 14px;
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+
+        /* 响应 */
+        .zhh_meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .zhh_badge {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-family: Consolas, monospace;
+        }
+        .zhh_b2 { background: #10b981; }
+        .zhh_b3 { background: #0ea5e9; }
+        .zhh_b4 { background: #f59e0b; }
+        .zhh_b5 { background: #ef4444; }
+        .zhh_b0 { background: #6b7280; }
+        .zhh_chip {
+            font-size: 12px;
+            color: #4b5563;
+            background: #f3f4f6;
+            border-radius: 999px;
+            padding: 4px 10px;
+        }
+        .zhh_chip b { color: #6366f1; }
+
+        .zhh_resp_headers {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            line-height: 1.9;
+            max-height: 160px;
+            overflow: auto;
+        }
+        .zhh_resp_headers b { color: #0ea5e9; }
+
+        .zhh_out {
+            font-family: Consolas, "Courier New", monospace;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre;
+            overflow: auto;
+            max-height: 460px;
+        }
+        .zhh_out .zhh_t_key  { color: #7dd3fc; }
+        .zhh_out .zhh_t_str  { color: #86efac; }
+        .zhh_out .zhh_t_num  { color: #fdba74; }
+        .zhh_out .zhh_t_bool { color: #d8b4fe; }
+        .zhh_out .zhh_t_null { color: #94a3b8; }
+        .zhh_out .zhh_t_punc { color: #64748b; }
+
+        .zhh_err {
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .zhh_err b { color: #b91c1c; }
+        .zhh_placeholder { color: #9ca3af; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-02，使用的大模型：GLM-5.3-Flash，功能名称：远程接口测试工具，支持 GET/POST 等方法并显示返回数据与错误 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>接口测试工具 · fetch GET / POST</h1>
+            <p>张淮皓的JavaScript · 像迷你 Postman：填方法、URL、请求头、请求体，发送后看状态码、响应头与返回数据</p>
+        </div>
+
+        <!-- 请求构造器 -->
+        <div class="zhh_card">
+            <h2>请求构造器</h2>
+            <div class="zhh_row">
+                <select class="zhh_method" id="zhh_method" onchange="zhh_onMethod()">
+                    <option>GET</option>
+                    <option>POST</option>
+                    <option>PUT</option>
+                    <option>PATCH</option>
+                    <option>DELETE</option>
+                </select>
+                <input class="zhh_url" id="zhh_url" value="https://jsonplaceholder.typicode.com/posts" placeholder="输入接口 URL">
+                <button class="zhh_send" id="zhh_send" onclick="zhh_send()">发送</button>
+            </div>
+
+            <div class="zhh_presets">
+                <button class="zhh_pre" onclick="zhh_preset('GET','https://jsonplaceholder.typicode.com/posts','')">GET /posts</button>
+                <button class="zhh_pre" onclick="zhh_preset('GET','https://jsonplaceholder.typicode.com/posts/1','')">GET /posts/1</button>
+                <button class="zhh_pre" onclick="zhh_preset('POST','https://jsonplaceholder.typicode.com/posts','{&#10;  &quot;title&quot;: &quot;张淮皓的测试&quot;,&#10;  &quot;body&quot;: &quot;用 fetch 发送 POST&quot;,&#10;  &quot;userId&quot;: 1&#10;}')">POST /posts</button>
+                <button class="zhh_pre" onclick="zhh_preset('PUT','https://jsonplaceholder.typicode.com/posts/1','{&#10;  &quot;id&quot;: 1,&#10;  &quot;title&quot;: &quot;已修改标题&quot;,&#10;  &quot;body&quot;: &quot;PUT 更新&quot;,&#10;  &quot;userId&quot;: 1&#10;}')">PUT /posts/1</button>
+                <button class="zhh_pre" onclick="zhh_preset('PATCH','https://jsonplaceholder.typicode.com/posts/1','{&#10;  &quot;title&quot;: &quot;只改标题&quot;,&#10;  &quot;rating&quot;: 5&#10;}')">PATCH /posts/1</button>
+                <button class="zhh_pre" onclick="zhh_preset('DELETE','https://jsonplaceholder.typicode.com/posts/1','')">DELETE /posts/1</button>
+            </div>
+
+            <div class="zhh_sub">
+                <h3>请求头 Headers</h3>
+                <div class="zhh_headers" id="zhh_headers">
+                    <div class="zhh_hrow">
+                        <input class="zhh_hk" value="Content-Type">
+                        <input class="zhh_hv" value="application/json">
+                        <button class="zhh_hdel" onclick="zhh_delHeader(this)">×</button>
+                    </div>
+                </div>
+                <button class="zhh_addh" onclick="zhh_addHeader()">+ 添加请求头</button>
+            </div>
+
+            <div class="zhh_sub">
+                <h3>请求体 Body（GET / DELETE 不发送）</h3>
+                <textarea class="zhh_body" id="zhh_body" spellcheck="false">{
+  "title": "张淮皓的测试",
+  "body": "用 fetch 发送 POST",
+  "userId": 1
+}</textarea>
+            </div>
+
+            <div class="zhh_preview" id="zhh_preview"></div>
+        </div>
+
+        <!-- 响应结果 -->
+        <div class="zhh_card">
+            <h2>响应结果</h2>
+            <div class="zhh_meta" id="zhh_meta">
+                <span class="zhh_placeholder">点击“发送”后这里会显示状态码、耗时与数据大小</span>
+            </div>
+            <div class="zhh_resp_headers" id="zhh_resp_headers" style="display:none"></div>
+            <div class="zhh_out" id="zhh_out"><span class="zhh_placeholder">暂无响应数据</span></div>
+            <div class="zhh_err" id="zhh_err" style="display:none"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 请求头增删 ===== */
+        function zhh_addHeader() {
+            var zhh_box = document.getElementById("zhh_headers");
+            var zhh_div = document.createElement("div");
+            zhh_div.className = "zhh_hrow";
+            zhh_div.innerHTML =
+                '<input class="zhh_hk" placeholder="键名">' +
+                '<input class="zhh_hv" placeholder="值">' +
+                '<button class="zhh_hdel" onclick="zhh_delHeader(this)">×</button>';
+            zhh_box.appendChild(zhh_div);
+        }
+        function zhh_delHeader(zhh_btn) {
+            zhh_btn.parentElement.remove();
+            zhh_renderPreview();
+        }
+
+        /* ===== 方法切换：GET/DELETE 禁用请求体 ===== */
+        function zhh_onMethod() {
+            var zhh_m = document.getElementById("zhh_method").value;
+            var zhh_body = document.getElementById("zhh_body");
+            zhh_body.disabled = (zhh_m === "GET" || zhh_m === "DELETE");
+            zhh_renderPreview();
+        }
+
+        /* ===== 预设按钮 ===== */
+        function zhh_preset(zhh_m, zhh_url, zhh_body) {
+            document.getElementById("zhh_method").value = zhh_m;
+            document.getElementById("zhh_url").value = zhh_url;
+            document.getElementById("zhh_body").value = zhh_body;
+            zhh_onMethod();
+        }
+
+        /* ===== 收集请求头 ===== */
+        function zhh_collectHeaders() {
+            var zhh_rows = document.querySelectorAll("#zhh_headers .zhh_hrow");
+            var zhh_h = {};
+            for (var i = 0; i < zhh_rows.length; i++) {
+                var zhh_k = zhh_rows[i].querySelector(".zhh_hk").value.trim();
+                var zhh_v = zhh_rows[i].querySelector(".zhh_hv").value.trim();
+                if (zhh_k) zhh_h[zhh_k] = zhh_v;
+            }
+            return zhh_h;
+        }
+
+        /* ===== 生成 fetch 调用预览 ===== */
+        function zhh_renderPreview() {
+            var zhh_m = document.getElementById("zhh_method").value;
+            var zhh_url = document.getElementById("zhh_url").value;
+            var zhh_h = zhh_collectHeaders();
+            var zhh_body = document.getElementById("zhh_body").value;
+            var zhh_lines = ["fetch(" + JSON.stringify(zhh_url) + ", {"];
+            zhh_lines.push("  method: " + JSON.stringify(zhh_m) + ",");
+            if (Object.keys(zhh_h).length) {
+                zhh_lines.push("  headers: " + JSON.stringify(zhh_h) + ",");
+            }
+            if (zhh_body.trim() && zhh_m !== "GET" && zhh_m !== "DELETE") {
+                zhh_lines.push("  body: " + JSON.stringify(zhh_body.trim()));
+            }
+            zhh_lines.push("})");
+            document.getElementById("zhh_preview").textContent = zhh_lines.join("\n");
+        }
+
+        /* ===== 发送请求 ===== */
+        function zhh_send() {
+            var zhh_m = document.getElementById("zhh_method").value;
+            var zhh_url = document.getElementById("zhh_url").value.trim();
+            var zhh_h = zhh_collectHeaders();
+            var zhh_body = document.getElementById("zhh_body").value;
+            var zhh_btn = document.getElementById("zhh_send");
+
+            if (!zhh_url) { zhh_showError("请填写接口 URL"); return; }
+
+            zhh_renderPreview();
+            zhh_btn.disabled = true;
+            zhh_btn.textContent = "发送中…";
+            zhh_clearResult();
+
+            var zhh_opts = { method: zhh_m, headers: zhh_h };
+            if (zhh_body.trim() && zhh_m !== "GET" && zhh_m !== "DELETE") {
+                zhh_opts.body = zhh_body.trim();
+            }
+
+            var zhh_t0 = performance.now();
+            fetch(zhh_url, zhh_opts)
+                .then(function (r) {
+                    var zhh_ms = Math.round(performance.now() - zhh_t0);
+                    // 读取响应头
+                    var zhh_hList = [];
+                    r.headers.forEach(function (v, k) { zhh_hList.push(k + ": " + v); });
+                    return r.text().then(function (zhh_text) {
+                        return { status: r.status, statusText: r.statusText, headers: zhh_hList, text: zhh_text, ms: zhh_ms };
+                    });
+                })
+                .then(function (zhh_resp) {
+                    zhh_showResult(zhh_resp);
+                })
+                .catch(function (err) {
+                    // 网络错误 / CORS / 无效 URL
+                    var zhh_ms = Math.round(performance.now() - zhh_t0);
+                    zhh_showError(err.message + "\n\n耗时：" + zhh_ms + " ms\n常见原因：\n1. 用 file:// 打开页面，浏览器拦截了 fetch，请用 http:// 本地服务器预览；\n2. URL 无效或协议不是 http/https；\n3. 接口不支持 CORS（跨域）；\n4. 网络无法访问目标域名。");
+                })
+                .finally(function () {
+                    zhh_btn.disabled = false;
+                    zhh_btn.textContent = "发送";
+                });
+        }
+
+        /* ===== 显示响应结果 ===== */
+        function zhh_showResult(zhh_resp) {
+            // 状态徽章
+            var zhh_s = zhh_resp.status;
+            var zhh_cls = zhh_s === 0 ? "zhh_b0" : (zhh_s < 300 ? "zhh_b2" : (zhh_s < 400 ? "zhh_b3" : (zhh_s < 500 ? "zhh_b4" : "zhh_b5")));
+            // 大小
+            var zhh_bytes = new Blob([zhh_resp.text]).size;
+            var zhh_size = zhh_bytes < 1024 ? zhh_bytes + " B" : (zhh_bytes / 1024).toFixed(1) + " KB";
+            document.getElementById("zhh_meta").innerHTML =
+                '<span class="zhh_badge ' + zhh_cls + '">' + zhh_s + ' ' + zhh_esc(zhh_resp.statusText || "") + '</span>' +
+                '<span class="zhh_chip">耗时 <b>' + zhh_resp.ms + ' ms</b></span>' +
+                '<span class="zhh_chip">大小 <b>' + zhh_size + '</b></span>';
+
+            // 响应头
+            var zhh_hBox = document.getElementById("zhh_resp_headers");
+            if (zhh_resp.headers.length) {
+                zhh_hBox.style.display = "block";
+                zhh_hBox.innerHTML = zhh_resp.headers.map(function (h) {
+                    var zhh_i = h.indexOf(":");
+                    return "<b>" + zhh_esc(h.slice(0, zhh_i)) + "</b>:" + zhh_esc(h.slice(zhh_i + 1));
+                }).join("\n");
+            } else {
+                zhh_hBox.style.display = "block";
+                zhh_hBox.innerHTML = "<i>（无可见响应头，部分头受 CORS 限制不暴露）</i>";
+            }
+
+            // 响应体
+            var zhh_out = document.getElementById("zhh_out");
+            if (!zhh_resp.text) {
+                zhh_out.innerHTML = '<span class="zhh_placeholder">（响应体为空）</span>';
+                return;
+            }
+            // 尝试解析为 JSON 并高亮
+            try {
+                var zhh_val = JSON.parse(zhh_resp.text);
+                zhh_out.innerHTML = zhh_pretty(zhh_val);
+            } catch (e) {
+                // 非 JSON，按纯文本显示
+                zhh_out.textContent = zhh_resp.text;
+            }
+        }
+
+        function zhh_showError(zhh_msg) {
+            zhh_clearResult();
+            var zhh_err = document.getElementById("zhh_err");
+            zhh_err.style.display = "block";
+            zhh_err.innerHTML = "<b>请求失败：</b>\n" + zhh_esc(zhh_msg).replace(/\n/g, "<br>");
+        }
+
+        function zhh_clearResult() {
+            document.getElementById("zhh_meta").innerHTML = "";
+            document.getElementById("zhh_resp_headers").style.display = "none";
+            document.getElementById("zhh_resp_headers").innerHTML = "";
+            document.getElementById("zhh_out").innerHTML = '<span class="zhh_placeholder">暂无响应数据</span>';
+            document.getElementById("zhh_err").style.display = "none";
+            document.getElementById("zhh_err").innerHTML = "";
+        }
+
+        /* ===== JSON 高亮渲染（与 17-1 一致） ===== */
+        function zhh_esc(s) {
+            return String(s == null ? "" : s)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+        function zhh_pretty(v, deep) {
+            deep = deep || 0;
+            var pad = "  ".repeat(deep);
+            var padIn = "  ".repeat(deep + 1);
+            if (v === null) return '<span class="zhh_t_null">null</span>';
+            if (typeof v === "boolean") return '<span class="zhh_t_bool">' + v + '</span>';
+            if (typeof v === "number") return '<span class="zhh_t_num">' + v + '</span>';
+            if (typeof v === "string") return '<span class="zhh_t_str">"' + zhh_esc(v) + '"</span>';
+            if (Array.isArray(v)) {
+                if (v.length === 0) return '<span class="zhh_t_punc">[]</span>';
+                var items = v.map(function (it) { return padIn + zhh_pretty(it, deep + 1); });
+                return '<span class="zhh_t_punc">[</span>\n' + items.join('<span class="zhh_t_punc">,</span>\n')
+                    + '\n' + pad + '<span class="zhh_t_punc">]</span>';
+            }
+            var keys = Object.keys(v);
+            if (keys.length === 0) return '<span class="zhh_t_punc">{}</span>';
+            var pairs = keys.map(function (k) {
+                return padIn + '<span class="zhh_t_key">"' + zhh_esc(k) + '"</span><span class="zhh_t_punc">:</span> '
+                    + zhh_pretty(v[k], deep + 1);
+            });
+            return '<span class="zhh_t_punc">{</span>\n' + pairs.join('<span class="zhh_t_punc">,</span>\n')
+                + '\n' + pad + '<span class="zhh_t_punc">}</span>';
+        }
+
+        // 初始化
+        zhh_onMethod();
+        zhh_renderPreview();
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 数据格式 · 形象演示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1000px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        /* ===== 舞台：一份 JSON 长这样 ===== */
+        .zhh_stage {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            margin-bottom: 20px;
+        }
+        .zhh_stage h2 { font-size: 19px; margin-bottom: 4px; }
+        .zhh_stage > p.zhh_tip { font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+        .zhh_json {
+            font-family: Consolas, "Courier New", monospace;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            font-size: 14px;
+            line-height: 1.9;
+            white-space: pre;
+            overflow: auto;
+        }
+        .zhh_json .zhh_t_key   { color: #7dd3fc; }
+        .zhh_json .zhh_t_str   { color: #86efac; }
+        .zhh_json .zhh_t_num   { color: #fdba74; }
+        .zhh_json .zhh_json .zhh_t_bool  { color: #d8b4fe; }
+        .zhh_json .zhh_t_bool  { color: #d8b4fe; }
+        .zhh_json .zhh_t_null  { color: #94a3b8; }
+        .zhh_json .zhh_t_punc  { color: #64748b; }
+
+        /* ===== 卡片网格 ===== */
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 520px) { .zhh_grid { grid-template-columns: 1fr; } }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_type  { border-top-color: #0ea5e9; }
+        .zhh_c_vs    { border-top-color: #f59e0b; }
+        .zhh_c_parse { border-top-color: #10b981; }
+        .zhh_c_str   { border-top-color: #ec4899; }
+        .zhh_c_try   { border-top-color: #8b5cf6; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            background: #6366f1;
+        }
+        .zhh_tag_type  { background: #0ea5e9; }
+        .zhh_tag_vs    { background: #f59e0b; }
+        .zhh_tag_parse { background: #10b981; }
+        .zhh_tag_str   { background: #ec4899; }
+        .zhh_tag_try   { background: #8b5cf6; }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .zhh_btns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_btn_type  { background: #0ea5e9; }
+        .zhh_btn_vs    { background: #f59e0b; }
+        .zhh_btn_parse { background: #10b981; }
+        .zhh_btn_str   { background: #ec4899; }
+        .zhh_btn_try   { background: #8b5cf6; }
+        .zhh_btn_ghost { background: #9ca3af; }
+
+        .zhh_res {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 38px;
+            line-height: 1.8;
+        }
+        .zhh_res b { color: #6366f1; font-family: Consolas, monospace; }
+        .zhh_card.zhh_c_type  .zhh_res b { color: #0ea5e9; }
+        .zhh_card.zhh_c_vs    .zhh_res b { color: #f59e0b; }
+        .zhh_card.zhh_c_parse .zhh_res b { color: #10b981; }
+        .zhh_card.zhh_c_str   .zhh_res b { color: #ec4899; }
+        .zhh_card.zhh_c_try   .zhh_res b { color: #8b5cf6; }
+
+        /* 类型徽章 */
+        .zhh_types { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .zhh_typebox {
+            flex: 1 1 130px;
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .zhh_typebox .zhh_tname { font-size: 13px; color: #6b7280; margin-bottom: 4px; }
+        .zhh_typebox .zhh_tval {
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .zhh_tc_str  { color: #16a34a; }
+        .zhh_tc_num  { color: #ea580c; }
+        .zhh_tc_bool { color: #9333ea; }
+        .zhh_tc_null { color: #6b7280; }
+        .zhh_tc_arr  { color: #0ea5e9; }
+        .zhh_tc_obj  { color: #ec4899; }
+
+        /* 属性列表 */
+        .zhh_props { margin-top: 12px; }
+        .zhh_prop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #f9fafb;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .zhh_prop .zhh_pk { font-family: Consolas, monospace; color: #0ea5e9; }
+        .zhh_prop .zhh_pv { font-family: Consolas, monospace; color: #374151; }
+        .zhh_prop .zhh_pt {
+            font-size: 11px;
+            color: #fff;
+            background: #94a3b8;
+            border-radius: 999px;
+            padding: 2px 8px;
+            margin-left: 8px;
+        }
+
+        /* 交互区文本框 */
+        .zhh_area {
+            width: 100%;
+            min-height: 130px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: #1f2937;
+            resize: vertical;
+            outline: none;
+            line-height: 1.7;
+        }
+        .zhh_area:focus { border-color: #8b5cf6; }
+        .zhh_err {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: none;
+            line-height: 1.7;
+        }
+        .zhh_ok {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #15803d;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-02，使用的大模型：GLM-5.3-Flash，功能名称：JSON 数据格式形象演示 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JSON 数据格式 · 形象演示</h1>
+            <p>张淮皓的JavaScript · JSON 就是用文字把数据“画”出来，人和机器都能读懂</p>
+        </div>
+
+        <!-- 舞台：一份完整的 JSON -->
+        <div class="zhh_stage">
+            <h2>一份 JSON 长这样</h2>
+            <p class="zhh_tip">下面描述了一个“学生”对象，键名必须用双引号，不同颜色代表不同的数据类型</p>
+            <div class="zhh_json" id="zhh_stage_json"></div>
+        </div>
+
+        <div class="zhh_grid">
+            <!-- 六种数据类型 -->
+            <div class="zhh_card zhh_c_type">
+                <span class="zhh_tag zhh_tag_type">数据类型</span>
+                <h3>JSON 只有六种值</h3>
+                <div class="zhh_types">
+                    <div class="zhh_typebox"><div class="zhh_tname">字符串 string</div><div class="zhh_tval zhh_tc_str">"前端"</div></div>
+                    <div class="zhh_typebox"><div class="zhh_tname">数字 number</div><div class="zhh_tval zhh_tc_num">20</div></div>
+                    <div class="zhh_typebox"><div class="zhh_tname">布尔 boolean</div><div class="zhh_tval zhh_tc_bool">true</div></div>
+                    <div class="zhh_typebox"><div class="zhh_tname">空值 null</div><div class="zhh_tval zhh_tc_null">null</div></div>
+                    <div class="zhh_typebox"><div class="zhh_tname">数组 array</div><div class="zhh_tval zhh_tc_arr">[1, 2]</div></div>
+                    <div class="zhh_typebox"><div class="zhh_tname">对象 object</div><div class="zhh_tval zhh_tc_obj">{ }</div></div>
+                </div>
+                <div class="zhh_res">JSON <b>不支持</b>函数、undefined、日期、单引号字符串，这些都是 JS 才有的</div>
+            </div>
+
+            <!-- JSON vs JS 对象 -->
+            <div class="zhh_card zhh_c_vs">
+                <span class="zhh_tag zhh_tag_vs">语法对比</span>
+                <h3>JSON ≠ JavaScript 对象</h3>
+                <div class="zhh_code">// ❌ JS 对象写法（键可不加引号，可有函数）
+var zhh_o = { name: "张淮皓", age: 20,
+              say: function(){ } };
+
+// ✅ 合法 JSON（键必须双引号，无函数、无尾逗号）
+{ "name": "张淮皓", "age": 20 }</div>
+                <div class="zhh_res">JSON 是<b>纯文本格式</b>，键名必须用双引号、不能有尾随逗号、值不能是函数或 <b>undefined</b></div>
+            </div>
+
+            <!-- JSON.parse -->
+            <div class="zhh_card zhh_c_parse">
+                <span class="zhh_tag zhh_tag_parse">字符串 → 对象</span>
+                <h3>JSON.parse() · 把文字读成数据</h3>
+                <div class="zhh_code">var zhh_s = '{"name":"张淮皓","age":20,"vip":true}';
+var zhh_obj = JSON.parse(zhh_s);
+// 现在 zhh_obj.name 就能取到 "张淮皓"</div>
+                <button class="zhh_btn zhh_btn_parse" onclick="zhh_runParse()">执行 JSON.parse()</button>
+                <div class="zhh_props" id="zhh_parse_props"></div>
+            </div>
+
+            <!-- JSON.stringify -->
+            <div class="zhh_card zhh_c_str">
+                <span class="zhh_tag zhh_tag_str">对象 → 字符串</span>
+                <h3>JSON.stringify() · 把数据写成文字</h3>
+                <div class="zhh_code">var zhh_data = { name:"张淮皓", hobby:["前端","音乐"] };
+JSON.stringify(zhh_data)            // 压缩成一行
+JSON.stringify(zhh_data, null, 2)   // 缩进 2 格，便于阅读</div>
+                <div class="zhh_btns">
+                    <button class="zhh_btn zhh_btn_str" onclick="zhh_runStringify(0)">压缩（一行）</button>
+                    <button class="zhh_btn zhh_btn_str" onclick="zhh_runStringify(2)">格式化（缩进 2）</button>
+                </div>
+                <div class="zhh_json" id="zhh_str_out" style="margin-top:12px;font-size:13px;padding:14px 16px"></div>
+            </div>
+
+            <!-- 试试手：自由输入解析 -->
+            <div class="zhh_card zhh_c_try">
+                <span class="zhh_tag zhh_tag_try">动手试试</span>
+                <h3>输入 JSON → 解析并高亮</h3>
+                <textarea class="zhh_area" id="zhh_input" spellcheck="false">{
+  "course": "高级网页设计",
+  "lesson": 17,
+  "topics": ["JSON", "fetch", "存储"],
+  "teacher": { "name": "袁磊", "office": "信息楼" },
+  "passed": true,
+  "score": null
+}</textarea>
+                <div class="zhh_btns" style="margin-top:10px">
+                    <button class="zhh_btn zhh_btn_try" onclick="zhh_runTry()">解析并高亮</button>
+                    <button class="zhh_btn zhh_btn_ghost" onclick="zhh_loadSample()">载入示例</button>
+                </div>
+                <div class="zhh_ok" id="zhh_ok"></div>
+                <div class="zhh_err" id="zhh_err"></div>
+                <div class="zhh_json" id="zhh_try_out" style="margin-top:10px;font-size:13px;padding:14px 16px"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 颜色高亮：把任意 JS 值画成带颜色的 JSON 文本 ===== */
+        function zhh_esc(zhh_s) {
+            return String(zhh_s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+        function zhh_pretty(zhh_v, zhh_deep) {
+            zhh_deep = zhh_deep || 0;
+            var zhh_pad = "  ".repeat(zhh_deep);
+            var zhh_padIn = "  ".repeat(zhh_deep + 1);
+            if (zhh_v === null) return '<span class="zhh_t_null">null</span>';
+            if (typeof zhh_v === "boolean") return '<span class="zhh_t_bool">' + zhh_v + '</span>';
+            if (typeof zhh_v === "number") return '<span class="zhh_t_num">' + zhh_v + '</span>';
+            if (typeof zhh_v === "string") return '<span class="zhh_t_str">"' + zhh_esc(zhh_v) + '"</span>';
+            if (Array.isArray(zhh_v)) {
+                if (zhh_v.length === 0) return '<span class="zhh_t_punc">[]</span>';
+                var zhh_items = zhh_v.map(function (it) {
+                    return zhh_padIn + zhh_pretty(it, zhh_deep + 1);
+                });
+                return '<span class="zhh_t_punc">[</span>\n' + zhh_items.join('<span class="zhh_t_punc">,</span>\n')
+                    + '\n' + zhh_pad + '<span class="zhh_t_punc">]</span>';
+            }
+            var zhh_keys = Object.keys(zhh_v);
+            if (zhh_keys.length === 0) return '<span class="zhh_t_punc">{}</span>';
+            var zhh_pairs = zhh_keys.map(function (k) {
+                return zhh_padIn + '<span class="zhh_t_key">"' + zhh_esc(k) + '"</span><span class="zhh_t_punc">:</span> '
+                    + zhh_pretty(zhh_v[k], zhh_deep + 1);
+            });
+            return '<span class="zhh_t_punc">{</span>\n' + zhh_pairs.join('<span class="zhh_t_punc">,</span>\n')
+                + '\n' + zhh_pad + '<span class="zhh_t_punc">}</span>';
+        }
+
+        /* 舞台示例数据 */
+        var zhh_stageData = {
+            "name": "张淮皓",
+            "age": 20,
+            "isStudent": true,
+            "hobby": ["前端", "音乐", "游戏"],
+            "address": { "city": "徐州", "zip": "221000" },
+            "score": null
+        };
+        document.getElementById("zhh_stage_json").innerHTML = zhh_pretty(zhh_stageData);
+
+        /* ===== JSON.parse 演示 ===== */
+        function zhh_typeof(zhh_v) {
+            if (zhh_v === null) return "null";
+            if (Array.isArray(zhh_v)) return "array";
+            return typeof zhh_v;
+        }
+        function zhh_runParse() {
+            var zhh_s = '{"name":"张淮皓","age":20,"vip":true,"hobby":["前端","音乐"],"score":null}';
+            var zhh_obj = JSON.parse(zhh_s);
+            var zhh_keys = Object.keys(zhh_obj);
+            var zhh_html = "";
+            for (var zhh_i = 0; zhh_i < zhh_keys.length; zhh_i++) {
+                var zhh_k = zhh_keys[zhh_i];
+                var zhh_v = zhh_obj[zhh_k];
+                var zhh_show = (zhh_typeof(zhh_v) === "object") ? JSON.stringify(zhh_v) : String(zhh_v);
+                zhh_html += '<div class="zhh_prop">'
+                    + '<span><span class="zhh_pk">"' + zhh_esc(zhh_k) + '"</span></span>'
+                    + '<span><span class="zhh_pv">' + zhh_esc(zhh_show) + '</span>'
+                    + '<span class="zhh_pt">' + zhh_typeof(zhh_v) + '</span></span>'
+                    + '</div>';
+            }
+            document.getElementById("zhh_parse_props").innerHTML =
+                '<div style="font-size:13px;color:#10b981;margin-bottom:8px">✓ 解析成功，得到 <b>' + zhh_keys.length + '</b> 个属性：</div>' + zhh_html;
+        }
+
+        /* ===== JSON.stringify 演示 ===== */
+        var zhh_dataForStr = { name: "张淮皓", hobby: ["前端", "音乐"], vip: true, score: null };
+        function zhh_runStringify(zhh_indent) {
+            if (zhh_indent === 0) {
+                document.getElementById("zhh_str_out").innerHTML =
+                    '<span style="color:#94a3b8">// JSON.stringify(zhh_data)</span>\n'
+                    + zhh_esc(JSON.stringify(zhh_dataForStr));
+            } else {
+                document.getElementById("zhh_str_out").innerHTML =
+                    '<span style="color:#94a3b8">// JSON.stringify(zhh_data, null, 2)</span>\n'
+                    + zhh_pretty(zhh_dataForStr);
+            }
+        }
+
+        /* ===== 动手试试 ===== */
+        function zhh_runTry() {
+            var zhh_raw = document.getElementById("zhh_input").value;
+            var zhh_ok = document.getElementById("zhh_ok");
+            var zhh_err = document.getElementById("zhh_err");
+            var zhh_out = document.getElementById("zhh_try_out");
+            zhh_ok.style.display = "none";
+            zhh_err.style.display = "none";
+            try {
+                var zhh_val = JSON.parse(zhh_raw);
+                zhh_out.innerHTML = zhh_pretty(zhh_val);
+                var zhh_cnt = (zhh_val && typeof zhh_val === "object")
+                    ? (Array.isArray(zhh_val) ? zhh_val.length + " 个元素" : Object.keys(zhh_val).length + " 个键")
+                    : "1 个基本值";
+                zhh_ok.innerHTML = "✓ 解析成功！得到 " + zhh_cnt;
+                zhh_ok.style.display = "block";
+            } catch (zhh_e) {
+                zhh_out.innerHTML = "";
+                zhh_err.innerHTML = "✗ 解析失败：" + zhh_esc(zhh_e.message);
+                zhh_err.style.display = "block";
+            }
+        }
+        function zhh_loadSample() {
+            document.getElementById("zhh_input").value =
+                '{\n  "course": "高级网页设计",\n  "lesson": 17,\n  "topics": ["JSON", "fetch", "存储"],\n'
+                + '  "teacher": { "name": "袁磊", "office": "信息楼" },\n  "passed": true,\n  "score": null\n}';
+            zhh_runTry();
+        }
+    </script>
+</body>
+</html>

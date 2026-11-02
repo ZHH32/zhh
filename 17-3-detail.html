@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情 · fetch 按 ID 查询</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1000px; margin: 0 auto; }
+        .zhh_topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .zhh_back {
+            text-decoration: none;
+            font-size: 14px;
+            color: #6366f1;
+            background: #fff;
+            border-radius: 8px;
+            padding: 8px 16px;
+            box-shadow: 0 2px 8px rgba(31, 41, 55, .08);
+            transition: transform .2s;
+        }
+        .zhh_back:hover { transform: translateX(-3px); }
+        .zhh_idtag {
+            font-size: 13px;
+            color: #6b7280;
+            font-family: Consolas, monospace;
+            background: #fff;
+            border-radius: 8px;
+            padding: 6px 12px;
+            box-shadow: 0 2px 8px rgba(31, 41, 55, .08);
+        }
+        .zhh_idtag b { color: #ec4899; }
+
+        .zhh_api {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-left: 4px solid #6366f1;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+        .zhh_api code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #6366f1;
+        }
+        .zhh_api .zhh_url { color: #ec4899; word-break: break-all; }
+
+        .zhh_state {
+            text-align: center;
+            padding: 70px 20px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+        }
+        .zhh_spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: zhh_spin 1s linear infinite;
+        }
+        @keyframes zhh_spin { to { transform: rotate(360deg); } }
+        .zhh_state p { font-size: 15px; color: #6b7280; }
+        .zhh_err {
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 16px 20px;
+            max-width: 560px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* 详情卡片 */
+        .zhh_detail {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(31, 41, 55, .1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 680px) { .zhh_detail { grid-template-columns: 1fr; } }
+
+        .zhh_gallery { position: relative; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 360px; }
+        .zhh_gallery img { width: 100%; height: 100%; min-height: 360px; max-height: 520px; object-fit: contain; display: block; }
+        .zhh_nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,.92);
+            color: #6366f1;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,.15);
+        }
+        .zhh_nav.prev { left: 12px; }
+        .zhh_nav.next { right: 12px; }
+        .zhh_dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+        .zhh_dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(99,102,241,.3); }
+        .zhh_dot.on { background: #6366f1; }
+
+        .zhh_info { padding: 28px 30px; }
+        .zhh_tags { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .zhh_tag {
+            font-size: 12px;
+            color: #6366f1;
+            background: #eef2ff;
+            border-radius: 999px;
+            padding: 3px 10px;
+        }
+        .zhh_tag.brand { color: #ec4899; background: #fdf2f8; }
+        .zhh_info h1 { font-size: 26px; color: #1f2937; margin-bottom: 14px; line-height: 1.3; }
+        .zhh_price { display: flex; align-items: baseline; gap: 10px; margin: 16px 0; }
+        .zhh_now { font-size: 30px; color: #ef4444; font-weight: bold; }
+        .zhh_old { font-size: 15px; color: #9ca3af; text-decoration: line-through; }
+        .zhh_disc { font-size: 12px; color: #fff; background: #ef4444; border-radius: 4px; padding: 2px 6px; }
+        .zhh_desc { font-size: 14px; color: #4b5563; line-height: 1.9; margin: 16px 0; }
+        .zhh_kv {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 16px;
+        }
+        @media (max-width: 420px) { .zhh_kv { grid-template-columns: 1fr; } }
+        .zhh_kv div { font-size: 13px; color: #4b5563; background: #f9fafb; border-radius: 8px; padding: 8px 12px; }
+        .zhh_kv div b { color: #6366f1; font-family: Consolas, monospace; }
+        .zhh_stars { color: #f59e0b; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-02，使用的大模型：GLM-5.3-Flash，功能名称：fetch 根据 ID 获取单个商品详情 -->
+    <div class="zhh_wrap">
+        <div class="zhh_topbar">
+            <a class="zhh_back" href="17-3.html">← 返回商品列表</a>
+            <div class="zhh_idtag">当前商品 ID：<b id="zhh_idtag">—</b></div>
+        </div>
+
+        <div class="zhh_api">
+            详情接口：<code class="zhh_url" id="zhh_api_show"></code>　|　方法：<code>GET</code><br>
+            做法：从地址栏 <code>?id=</code> 取出 ID，再 <code>fetch('https://dummyjson.com/products/' + id)</code> 获取单个商品。<br>
+            注意：<code>fetch</code> 仅在 <code>http://</code> 下可用，<b>请用本地静态服务器预览</b>。
+        </div>
+
+        <div id="zhh_container">
+            <div class="zhh_state">
+                <div class="zhh_spinner"></div>
+                <p>正在请求接口，请稍候…</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 从 URL 取出 id 参数
+        var zhh_params = new URLSearchParams(window.location.search);
+        var zhh_id = zhh_params.get("id");
+
+        // 缺少 id 时直接报错
+        if (!zhh_id) {
+            document.getElementById("zhh_container").innerHTML =
+                '<div class="zhh_state"><div class="zhh_err">地址栏缺少 <b>?id=商品ID</b> 参数。<br>请从 <a href="17-3.html" style="color:#6366f1">商品列表页</a> 点击进入。</div></div>';
+        } else {
+            document.getElementById("zhh_idtag").textContent = zhh_id;
+            var zhh_apiUrl = "https://dummyjson.com/products/" + encodeURIComponent(zhh_id);
+            document.getElementById("zhh_api_show").textContent = zhh_apiUrl;
+            zhh_load(zhh_apiUrl);
+        }
+
+        function zhh_load(zhh_url) {
+            fetch(zhh_url)
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP 状态码 " + r.status);
+                    return r.json();
+                })
+                .then(function (p) {
+                    if (!p || p.id === undefined) throw new Error("接口未返回商品数据");
+                    zhh_render(p);
+                })
+                .catch(function (err) {
+                    zhh_renderError(err);
+                });
+        }
+
+        var zhh_imgs = [];
+        var zhh_imgIdx = 0;
+
+        function zhh_render(p) {
+            zhh_imgs = (p.images && p.images.length) ? p.images : [p.thumbnail];
+            zhh_imgIdx = 0;
+
+            var zhh_disc = p.discountPercentage || 0;
+            var zhh_now = (p.price * (1 - zhh_disc / 100)).toFixed(2);
+            var zhh_full = Math.round(p.rating);
+            var zhh_star = "";
+            for (var i = 0; i < 5; i++) zhh_star += (i < zhh_full ? "★" : "☆");
+
+            var zhh_dots = "";
+            for (var d = 0; d < zhh_imgs.length; d++) zhh_dots += '<span class="zhh_dot' + (d === 0 ? " on" : "") + '"></span>';
+
+            document.getElementById("zhh_container").innerHTML =
+                '<div class="zhh_detail">' +
+                  '<div class="zhh_gallery">' +
+                    '<img id="zhh_gimg" src="' + zhh_esc(zhh_imgs[0]) + '" alt="' + zhh_esc(p.title) + '">' +
+                    (zhh_imgs.length > 1 ?
+                      '<button class="zhh_nav prev" onclick="zhh_slide(-1)">‹</button>' +
+                      '<button class="zhh_nav next" onclick="zhh_slide(1)">›</button>' : '') +
+                    '<div class="zhh_dots" id="zhh_dots">' + zhh_dots + '</div>' +
+                  '</div>' +
+                  '<div class="zhh_info">' +
+                    '<div class="zhh_tags">' +
+                      (p.category ? '<span class="zhh_tag">' + zhh_esc(p.category) + '</span>' : '') +
+                      (p.brand ? '<span class="zhh_tag brand">' + zhh_esc(p.brand) + '</span>' : '') +
+                    '</div>' +
+                    '<h1>' + zhh_esc(p.title) + '</h1>' +
+                    '<div class="zhh_price">' +
+                      '<span class="zhh_now">¥' + zhh_now + '</span>' +
+                      (zhh_disc > 0 ? '<span class="zhh_old">¥' + p.price + '</span><span class="zhh_disc">-' + Math.round(zhh_disc) + '%</span>' : '') +
+                    '</div>' +
+                    '<p class="zhh_desc">' + zhh_esc(p.description || "（暂无描述）") + '</p>' +
+                    '<div class="zhh_kv">' +
+                      '<div>评分：<b><span class="zhh_stars">' + zhh_star + '</span> ' + Number(p.rating).toFixed(1) + '</b></div>' +
+                      '<div>库存：<b>' + p.stock + '</b></div>' +
+                      '<div>SKU：<b>' + zhh_esc(p.sku || p.id) + '</b></div>' +
+                      '<div>重量：<b>' + (p.weight ? p.weight + ' g' : '—') + '</b></div>' +
+                      (p.warrantyInformation ? '<div>质保：<b>' + zhh_esc(p.warrantyInformation) + '</b></div>' : '') +
+                      (p.shippingInformation ? '<div>物流：<b>' + zhh_esc(p.shippingInformation) + '</b></div>' : '') +
+                      (p.availabilityStatus ? '<div>状态：<b>' + zhh_esc(p.availabilityStatus) + '</b></div>' : '') +
+                      (p.returnPolicy ? '<div>退货：<b>' + zhh_esc(p.returnPolicy) + '</b></div>' : '') +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+        }
+
+        function zhh_slide(zhh_dir) {
+            var n = zhh_imgs.length;
+            if (!n) return;
+            zhh_imgIdx = (zhh_imgIdx + zhh_dir + n) % n;
+            document.getElementById("zhh_gimg").src = zhh_imgs[zhh_imgIdx];
+            var zhh_dots = document.getElementById("zhh_dots").children;
+            for (var i = 0; i < zhh_dots.length; i++) {
+                zhh_dots[i].className = "zhh_dot" + (i === zhh_imgIdx ? " on" : "");
+            }
+        }
+
+        function zhh_renderError(err) {
+            document.getElementById("zhh_container").innerHTML =
+                '<div class="zhh_state">' +
+                  '<div class="zhh_err">' +
+                    '<b>获取详情失败：</b>' + zhh_esc(err.message) +
+                    '<br><br>可能原因：' +
+                    '<br>1. 用 <b>file://</b> 打开了页面 —— 浏览器会拦截 fetch，请用本地静态服务器以 <b>http://</b> 打开。' +
+                    '<br>2. 地址栏的 <b>id</b> 不存在（dummyjson 商品 ID 一般为 1~194）。' +
+                    '<br>3. 网络无法访问 dummyjson.com。' +
+                    '<br><br><a href="17-3.html" style="color:#6366f1">← 返回列表重新选择</a>' +
+                  '</div>' +
+                '</div>';
+        }
+
+        function zhh_esc(s) {
+            return String(s == null ? "" : s)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // 键盘左右切换 / 无需 ESC
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "ArrowLeft") zhh_slide(-1);
+            else if (e.key === "ArrowRight") zhh_slide(1);
+        });
+    </script>
+</body>
+</html>

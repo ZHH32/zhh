@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 定时器 · setTimeout / setInterval</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 980px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 500px) { .zhh_grid { grid-template-columns: 1fr; } }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(31, 41, 55, .14);
+        }
+        .zhh_c_iv  { border-top-color: #ec4899; }
+        .zhh_c_cmp { border-top-color: #10b981; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            background: #6366f1;
+        }
+        .zhh_tag_iv  { background: #ec4899; }
+        .zhh_tag_cmp { background: #10b981; }
+        .zhh_card h3 { font-size: 18px; margin-bottom: 10px; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 14px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .zhh_row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .zhh_input {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 90px;
+            outline: none;
+            font-family: Consolas, monospace;
+        }
+        .zhh_input:focus { border-color: #6366f1; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+        .zhh_btn_iv  { background: #ec4899; }
+        .zhh_btn_iv:disabled { background: #cbd5e1; }
+        .zhh_btn_ghost { background: #9ca3af; }
+
+        /* 倒计时环 */
+        .zhh_ringbox { display: flex; align-items: center; gap: 18px; }
+        .zhh_ring { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+        .zhh_ring svg { transform: rotate(-90deg); }
+        .zhh_ring .zhh_num {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #6366f1;
+            font-family: Consolas, monospace;
+        }
+        .zhh_state {
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.9;
+        }
+        .zhh_state b { color: #6366f1; font-family: Consolas, monospace; }
+        .zhh_state .zhh_fire { color: #10b981; font-weight: bold; }
+        .zhh_state .zhh_cancel { color: #ef4444; }
+
+        /* 时钟 + 计数 */
+        .zhh_clock {
+            font-family: Consolas, monospace;
+            font-size: 40px;
+            font-weight: bold;
+            color: #ec4899;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(236, 72, 153, .2);
+        }
+        .zhh_count {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+        }
+        .zhh_count b { color: #ec4899; font-family: Consolas, monospace; font-size: 16px; }
+
+        /* 动画轨道 */
+        .zhh_track {
+            position: relative;
+            height: 46px;
+            background: #fdf2f8;
+            border-radius: 999px;
+            margin-top: 14px;
+            overflow: hidden;
+            border: 1px solid #fce7f3;
+        }
+        .zhh_ball {
+            position: absolute;
+            top: 7px;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            box-shadow: 0 3px 10px rgba(236, 72, 153, .4);
+        }
+
+        /* 对比表 */
+        .zhh_table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 14px; }
+        .zhh_table th, .zhh_table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .zhh_table th { background: #f9fafb; color: #374151; }
+        .zhh_table td b { color: #10b981; }
+        .zhh_note { font-size: 13px; color: #4b5563; line-height: 1.9; }
+        .zhh_note b { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-02，使用的大模型：GLM-5.3-Flash，功能名称：JavaScript 两种定时器形象演示 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>JavaScript 定时器 · setTimeout / setInterval</h1>
+            <p>张淮皓的JavaScript · 一次性倒计时 vs 循环定时，形象对比两种定时器的用法与清除</p>
+        </div>
+
+        <div class="zhh_grid">
+            <!-- setTimeout -->
+            <div class="zhh_card">
+                <span class="zhh_tag">一次性定时器</span>
+                <h3>setTimeout() · 只执行一次</h3>
+                <div class="zhh_code">var zhh_id = setTimeout(function () {
+    console.log("时间到！");
+}, 3000);   // 3 秒后执行一次
+
+clearTimeout(zhh_id);  // 取消定时器</div>
+                <div class="zhh_row">
+                    <span>延迟：</span>
+                    <input class="zhh_input" type="number" id="zhh_to_sec" value="3" min="1" max="30"> 秒
+                    <button class="zhh_btn" id="zhh_to_start" onclick="zhh_startTimeout()">启动定时器</button>
+                    <button class="zhh_btn zhh_btn_ghost" id="zhh_to_clear" onclick="zhh_clearTimeout()">清除</button>
+                </div>
+                <div class="zhh_ringbox">
+                    <div class="zhh_ring">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" stroke-width="10"></circle>
+                            <circle id="zhh_ring_arc" cx="60" cy="60" r="54" fill="none" stroke="#6366f1"
+                                stroke-width="10" stroke-linecap="round"
+                                stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+                        </svg>
+                        <div class="zhh_num" id="zhh_to_num">3.0</div>
+                    </div>
+                    <div class="zhh_state" id="zhh_to_state">
+                        定时器 ID：<b>—</b><br>
+                        状态：<b>未启动</b>
+                    </div>
+                </div>
+            </div>
+
+            <!-- setInterval -->
+            <div class="zhh_card zhh_c_iv">
+                <span class="zhh_tag zhh_tag_iv">循环定时器</span>
+                <h3>setInterval() · 每隔一段时间重复执行</h3>
+                <div class="zhh_code">var zhh_id = setInterval(function () {
+    console.log("滴答");
+}, 1000);   // 每 1 秒执行一次
+
+clearInterval(zhh_id);  // 停止循环</div>
+                <div class="zhh_row">
+                    <button class="zhh_btn zhh_btn_iv" id="zhh_iv_start" onclick="zhh_startInterval()">开始计时</button>
+                    <button class="zhh_btn zhh_btn_ghost" id="zhh_iv_stop" onclick="zhh_stopInterval()">停止</button>
+                </div>
+                <div class="zhh_clock" id="zhh_clock">00:00:00</div>
+                <div class="zhh_count" id="zhh_count">定时器 ID：<b>—</b>　已触发 <b>0</b> 次</div>
+                <div class="zhh_track"><div class="zhh_ball" id="zhh_ball"></div></div>
+            </div>
+
+            <!-- 对比与注意 -->
+            <div class="zhh_card zhh_c_cmp">
+                <span class="zhh_tag zhh_tag_cmp">对比与注意</span>
+                <h3>两种定时器的区别</h3>
+                <table class="zhh_table">
+                    <tr><th></th><th>setTimeout</th><th>setInterval</th></tr>
+                    <tr><td>执行次数</td><td><b>1 次</b></td><td><b>多次</b>（每隔间隔）</td></tr>
+                    <tr><td>清除方法</td><td><b>clearTimeout</b>(id)</td><td><b>clearInterval</b>(id)</td></tr>
+                    <tr><td>返回值</td><td>定时器 ID（数字）</td><td>定时器 ID（数字）</td></tr>
+                    <tr><td>典型用途</td><td>倒计时、延迟跳转、防抖</td><td>时钟、轮询、动画</td></tr>
+                </table>
+                <div class="zhh_note">
+                    <b>注意：</b><br>
+                    1. 定时器返回的是一个 ID（数字），不用时要 <b>clearTimeout / clearInterval</b>，否则会一直占用内存或重复执行。<br>
+                    2. setInterval 不保证精确，如果回调执行时间超过间隔会堆积；更稳的做法是用<b>递归 setTimeout</b>。<br>
+                    3. 定时器回调里的 <b>this</b> 默认指向 window，箭头函数可保留外层 this。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== setTimeout：一次性倒计时 ===== */
+        var zhh_toId = null;     // 定时器 ID
+        var zhh_toTickId = null; // 用于刷新倒计时显示的小定时器
+        var zhh_toTotal = 0;     // 总时长（毫秒）
+        var zhh_toEnd = 0;       // 到期时间戳
+        var ZHH_CIRC = 339.292;  // 圆周长 2π×54
+
+        function zhh_startTimeout() {
+            // 先清理上一个
+            zhh_clearTimeout(true);
+            var zhh_sec = Number(document.getElementById("zhh_to_sec").value) || 3;
+            if (zhh_sec < 1) zhh_sec = 1;
+            zhh_toTotal = zhh_sec * 1000;
+            zhh_toEnd = Date.now() + zhh_toTotal;
+
+            // 主体：到时间触发
+            zhh_toId = setTimeout(function () {
+                clearInterval(zhh_toTickId);
+                zhh_toTickId = null;
+                document.getElementById("zhh_to_num").textContent = "0.0";
+                document.getElementById("zhh_ring_arc").style.strokeDashoffset = ZHH_CIRC;
+                document.getElementById("zhh_to_state").innerHTML =
+                    '定时器 ID：<b>' + zhh_toId + '</b><br>状态：<span class="zhh_fire">时间到！定时器已触发</span>';
+                zhh_toId = null;
+            }, zhh_toTotal);
+
+            // 刷新倒计时显示（每 100ms）
+            zhh_toTickId = setInterval(zhh_toUpdate, 100);
+            zhh_toUpdate();
+            document.getElementById("zhh_to_start").disabled = true;
+        }
+
+        function zhh_toUpdate() {
+            var zhh_remain = Math.max(0, zhh_toEnd - Date.now());
+            var zhh_frac = zhh_remain / zhh_toTotal;            // 剩余比例
+            document.getElementById("zhh_to_num").textContent = (zhh_remain / 1000).toFixed(1);
+            document.getElementById("zhh_ring_arc").style.strokeDashoffset = ZHH_CIRC * (1 - zhh_frac);
+            document.getElementById("zhh_to_state").innerHTML =
+                '定时器 ID：<b>' + (zhh_toId == null ? '—' : zhh_toId) + '</b><br>状态：<b>倒计时中…</b>';
+        }
+
+        function zhh_clearTimeout(zhh_silent) {
+            if (zhh_toId != null) { clearTimeout(zhh_toId); zhh_toId = null; }
+            if (zhh_toTickId != null) { clearInterval(zhh_toTickId); zhh_toTickId = null; }
+            document.getElementById("zhh_to_start").disabled = false;
+            if (!zhh_silent) {
+                var zhh_sec = Number(document.getElementById("zhh_to_sec").value) || 3;
+                document.getElementById("zhh_to_num").textContent = zhh_sec.toFixed(1);
+                document.getElementById("zhh_ring_arc").style.strokeDashoffset = ZHH_CIRC;
+                document.getElementById("zhh_to_state").innerHTML =
+                    '定时器 ID：<b>—</b><br>状态：<span class="zhh_cancel">已取消（clearTimeout）</span>';
+            }
+        }
+
+        /* ===== setInterval：循环定时器 ===== */
+        var zhh_ivId = null;     // 1 秒主定时器
+        var zhh_animId = null;   // 动画小球定时器（30ms）
+        var zhh_ivCount = 0;     // 触发次数
+        var zhh_ballX = 0;       // 小球位置（0~100 百分比）
+        var zhh_ballDir = 1;     // 方向
+
+        function zhh_startInterval() {
+            if (zhh_ivId != null) return;
+            zhh_ivCount = 0;
+            zhh_ivId = setInterval(zhh_tick, 1000);
+            zhh_tick(); // 立即执行一次
+            // 动画小球
+            zhh_animId = setInterval(zhh_anim, 30);
+            document.getElementById("zhh_iv_start").disabled = true;
+        }
+
+        function zhh_tick() {
+            zhh_ivCount++;
+            // 实时时钟
+            var zhh_d = new Date();
+            var zhh_h = String(zhh_d.getHours()).padStart(2, "0");
+            var zhh_m = String(zhh_d.getMinutes()).padStart(2, "0");
+            var zhh_s = String(zhh_d.getSeconds()).padStart(2, "0");
+            document.getElementById("zhh_clock").textContent = zhh_h + ":" + zhh_m + ":" + zhh_s;
+            document.getElementById("zhh_count").innerHTML =
+                '定时器 ID：<b>' + zhh_ivId + '</b>　已触发 <b>' + zhh_ivCount + '</b> 次';
+        }
+
+        function zhh_anim() {
+            zhh_ballX += zhh_ballDir * 1.2;
+            if (zhh_ballX >= 100) { zhh_ballX = 100; zhh_ballDir = -1; }
+            if (zhh_ballX <= 0)   { zhh_ballX = 0;   zhh_ballDir = 1; }
+            document.getElementById("zhh_ball").style.left = "calc(" + zhh_ballX + "% - 16px)";
+        }
+
+        function zhh_stopInterval() {
+            if (zhh_ivId != null) { clearInterval(zhh_ivId); zhh_ivId = null; }
+            if (zhh_animId != null) { clearInterval(zhh_animId); zhh_animId = null; }
+            document.getElementById("zhh_iv_start").disabled = false;
+            document.getElementById("zhh_count").innerHTML =
+                '定时器 ID：<b>—</b>　已触发 <b>' + zhh_ivCount + '</b> 次（已停止）';
+        }
+
+        // 页面卸载时清理，避免泄漏
+        window.addEventListener("beforeunload", function () {
+            if (zhh_toId != null) clearTimeout(zhh_toId);
+            if (zhh_toTickId != null) clearInterval(zhh_toTickId);
+            if (zhh_ivId != null) clearInterval(zhh_ivId);
+            if (zhh_animId != null) clearInterval(zhh_animId);
+        });
+    </script>
+</body>
+</html>

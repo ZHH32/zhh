@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表 · fetch 接口数据</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1100px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 24px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_api {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-left: 4px solid #6366f1;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+        .zhh_api code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #6366f1;
+        }
+        .zhh_api .zhh_url { color: #ec4899; word-break: break-all; }
+
+        .zhh_toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .zhh_status { font-size: 13px; color: #6b7280; }
+        .zhh_status b { color: #6366f1; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+        .zhh_state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+        }
+        .zhh_spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: zhh_spin 1s linear infinite;
+        }
+        @keyframes zhh_spin { to { transform: rotate(360deg); } }
+        .zhh_state p { font-size: 15px; color: #6b7280; }
+        .zhh_err {
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 16px 20px;
+            max-width: 560px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
+        }
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .zhh_card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 26px rgba(31, 41, 55, .16);
+        }
+        .zhh_thumb {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+        .zhh_body { padding: 12px 14px 14px; display: flex; flex-direction: column; flex: 1; }
+        .zhh_tags { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+        .zhh_tag {
+            font-size: 11px;
+            color: #6366f1;
+            background: #eef2ff;
+            border-radius: 999px;
+            padding: 2px 8px;
+        }
+        .zhh_tag.brand { color: #ec4899; background: #fdf2f8; }
+        .zhh_title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            min-height: 42px;
+        }
+        .zhh_price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+        .zhh_now { font-size: 18px; color: #ef4444; font-weight: bold; }
+        .zhh_old { font-size: 12px; color: #9ca3af; text-decoration: line-through; }
+        .zhh_disc { font-size: 11px; color: #fff; background: #ef4444; border-radius: 4px; padding: 1px 5px; }
+        .zhh_meta { display: flex; justify-content: space-between; font-size: 12px; color: #6b7280; margin-top: auto; }
+        .zhh_stars { color: #f59e0b; letter-spacing: 1px; }
+        .zhh_view {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #6366f1;
+            border-top: 1px dashed #e5e7eb;
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-02，使用的大模型：GLM-5.3-Flash，功能名称：fetch 获取商品列表，点击进入详情页 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>商品列表 · fetch 接口数据</h1>
+            <p>张淮皓的JavaScript · 列表页请求商品接口，点击卡片进入详情页（按 ID 查询）</p>
+        </div>
+
+        <div class="zhh_api">
+            列表接口：<code class="zhh_url">https://dummyjson.com/products?limit=8</code>　|　方法：<code>GET</code>　|　返回：<code>{ products: [ ... ] }</code><br>
+            每张卡片链接到 <code>17-3-detail.html?id=商品ID</code>，详情页再按 ID 请求 <code>https://dummyjson.com/products/{id}</code>。<br>
+            注意：<code>fetch</code> 仅在 <code>http://</code> 下可用，<b>请用本地静态服务器预览</b>（如 VS Code Live Server）。
+        </div>
+
+        <div class="zhh_toolbar">
+            <div class="zhh_status" id="zhh_status">准备获取数据…</div>
+            <button class="zhh_btn" id="zhh_refresh" onclick="zhh_load()">重新获取</button>
+        </div>
+
+        <div id="zhh_container">
+            <div class="zhh_state">
+                <div class="zhh_spinner"></div>
+                <p>正在请求接口，请稍候…</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var zhh_apiUrl = "https://dummyjson.com/products?limit=8";
+
+        function zhh_load() {
+            var zhh_box = document.getElementById("zhh_container");
+            var zhh_status = document.getElementById("zhh_status");
+            var zhh_btn = document.getElementById("zhh_refresh");
+            zhh_btn.disabled = true;
+            zhh_status.innerHTML = "正在请求接口…";
+            zhh_box.innerHTML =
+                '<div class="zhh_state"><div class="zhh_spinner"></div><p>正在请求接口，请稍候…</p></div>';
+
+            fetch(zhh_apiUrl)
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP 状态码 " + r.status);
+                    return r.json();
+                })
+                .then(function (data) {
+                    zhh_render(data.products || []);
+                    zhh_status.innerHTML = "获取成功，共 <b>" + (data.products || []).length + "</b> 件商品";
+                    zhh_btn.disabled = false;
+                })
+                .catch(function (err) {
+                    zhh_renderError(err);
+                    zhh_status.innerHTML = "获取失败";
+                    zhh_btn.disabled = false;
+                });
+        }
+
+        function zhh_render(zhh_list) {
+            if (!zhh_list.length) {
+                document.getElementById("zhh_container").innerHTML =
+                    '<div class="zhh_state"><p>接口返回的商品列表为空</p></div>';
+                return;
+            }
+            var zhh_html = '<div class="zhh_grid">';
+            for (var i = 0; i < zhh_list.length; i++) {
+                var p = zhh_list[i];
+                var zhh_disc = p.discountPercentage || 0;
+                var zhh_now = (p.price * (1 - zhh_disc / 100)).toFixed(2);
+                zhh_html +=
+                    '<a class="zhh_card" href="17-3-detail.html?id=' + encodeURIComponent(p.id) + '">' +
+                      '<img class="zhh_thumb" src="' + zhh_esc(p.thumbnail) + '" alt="' + zhh_esc(p.title) + '">' +
+                      '<div class="zhh_body">' +
+                        '<div class="zhh_tags">' +
+                          (p.category ? '<span class="zhh_tag">' + zhh_esc(p.category) + '</span>' : '') +
+                          (p.brand ? '<span class="zhh_tag brand">' + zhh_esc(p.brand) + '</span>' : '') +
+                        '</div>' +
+                        '<div class="zhh_title">' + zhh_esc(p.title) + '</div>' +
+                        '<div class="zhh_price">' +
+                          '<span class="zhh_now">¥' + zhh_now + '</span>' +
+                          (zhh_disc > 0 ? '<span class="zhh_old">¥' + p.price + '</span><span class="zhh_disc">-' + Math.round(zhh_disc) + '%</span>' : '') +
+                        '</div>' +
+                        '<div class="zhh_meta">' +
+                          '<span class="zhh_stars">' + zhh_starHtml(p.rating) + '</span>' +
+                          '<span>库存 ' + p.stock + '</span>' +
+                        '</div>' +
+                        '<div class="zhh_view">查看详情 →</div>' +
+                      '</div>' +
+                    '</a>';
+            }
+            zhh_html += '</div>';
+            document.getElementById("zhh_container").innerHTML = zhh_html;
+        }
+
+        function zhh_starHtml(zhh_rating) {
+            var zhh_full = Math.round(zhh_rating);
+            var s = "";
+            for (var i = 0; i < 5; i++) s += (i < zhh_full ? "★" : "☆");
+            return s + ' <span style="color:#6b7280">' + Number(zhh_rating).toFixed(1) + '</span>';
+        }
+
+        function zhh_renderError(err) {
+            document.getElementById("zhh_container").innerHTML =
+                '<div class="zhh_state">' +
+                  '<div class="zhh_err">' +
+                    '<b>获取数据失败：</b>' + zhh_esc(err.message) +
+                    '<br><br>常见原因：' +
+                    '<br>1. 直接双击用 <b>file://</b> 打开了页面 —— 浏览器会拦截 fetch，请用本地静态服务器以 <b>http://</b> 打开。' +
+                    '<br>2. 网络无法访问接口域名 dummyjson.com。' +
+                    '<br>3. 接口返回了非 200 状态码。' +
+                  '</div>' +
+                '</div>';
+        }
+
+        function zhh_esc(s) {
+            return String(s == null ? "" : s)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        zhh_load();
+    </script>
+</body>
+</html>
