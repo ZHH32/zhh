@@ -1,0 +1,50 @@
+<Slide style={{ width: 1280, height: 720, padding: 60, background: '#FFFFFF', flexDirection: 'column', fontFamily: '"Microsoft YaHei", Arial, sans-serif' }}>
+    <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#1F3A5F', lineHeight: 1.25 }}>增删改查：四句话操作一张表</Text>
+    <Box style={{ height: 1, background: '#D8DEE6', marginTop: 12 }} />
+
+    <Box style={{ border: '1px solid #D8DEE6', marginTop: 28 }}>
+        <Table
+            style={{ width: '100%', height: 400 }}
+            defaultTextStyle={{ fontSize: 16, textAlign: 'left', color: '#22272E' }}
+            defaultCellStyle={{ padding: 14, border: { bottom: { width: 1, color: '#E3E8EE' } } }}
+            cells={[
+                [
+                    { text: '操作', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                    { text: '关键字', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                    { text: '语句示例', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                    { text: '作用', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                ],
+                [
+                    '增',
+                    { text: 'INSERT', textStyle: { bold: true, color: '#C2410C' } },
+                    "INSERT INTO student (name, age) VALUES ('张三', 20);",
+                    '往表里加一行新数据',
+                ],
+                [
+                    '删',
+                    { text: 'DELETE', textStyle: { bold: true, color: '#C2410C' } },
+                    'DELETE FROM student WHERE id = 3;',
+                    '删掉符合条件的行，不写 WHERE 会把整张表清空',
+                ],
+                [
+                    '改',
+                    { text: 'UPDATE', textStyle: { bold: true, color: '#C2410C' } },
+                    'UPDATE student SET age = 21 WHERE id = 3;',
+                    '修改已有行的字段值',
+                ],
+                [
+                    '查',
+                    { text: 'SELECT', textStyle: { bold: true, color: '#C2410C' } },
+                    'SELECT name, age FROM student WHERE age > 18;',
+                    '按条件取出需要的列和行',
+                ],
+            ]}
+        />
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', gap: 16, background: '#EAF0F6', borderLeft: '3px solid #C2410C', padding: 18, marginTop: 24 }}>
+        <Text style={{ fontSize: 18, color: '#1F3A5F', lineHeight: 1.6 }}>四条语句的骨架都是「动词 + 表名 + 条件」。下笔前先想清楚动哪张表、动哪些行，最容易出事的是 DELETE 和 UPDATE 忘了写 WHERE。</Text>
+    </Box>
+
+    <Text style={{ position: 'absolute', right: 60, bottom: 26, fontSize: 14, color: '#8A94A0' }}>03</Text>
+</Slide>

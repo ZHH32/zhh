@@ -1,0 +1,48 @@
+<Slide style={{ width: 1280, height: 720, padding: 60, background: '#FFFFFF', flexDirection: 'column', fontFamily: '"Microsoft YaHei", Arial, sans-serif' }}>
+    <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#1F3A5F', lineHeight: 1.25 }}>MySQL 装完先做三步验证</Text>
+    <Box style={{ height: 1, background: '#D8DEE6', marginTop: 12 }} />
+
+    <Box style={{ flexDirection: 'row', gap: 40, marginTop: 28 }}>
+        <Box style={{ width: 620, flexDirection: 'column', gap: 24 }}>
+            <Box style={{ flexDirection: 'row', gap: 16 }}>
+                <Text style={{ width: 40, fontSize: 22, fontWeight: 'bold', color: '#C2410C', lineHeight: 1.3 }}>01</Text>
+                <Box style={{ width: 564, flexDirection: 'column' }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>安装时选 Server only</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 8 }}>端口保持默认的 3306，给 root 设一个自己记得住的密码，装完先别改配置。</Text>
+                </Box>
+            </Box>
+            <Box style={{ flexDirection: 'row', gap: 16 }}>
+                <Text style={{ width: 40, fontSize: 22, fontWeight: 'bold', color: '#C2410C', lineHeight: 1.3 }}>02</Text>
+                <Box style={{ width: 564, flexDirection: 'column' }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>用命令行连上去</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 8 }}>输入 mysql -u root -p，回车后输密码，看到 mysql&gt; 提示符就说明连上了。</Text>
+                </Box>
+            </Box>
+            <Box style={{ flexDirection: 'row', gap: 16 }}>
+                <Text style={{ width: 40, fontSize: 22, fontWeight: 'bold', color: '#C2410C', lineHeight: 1.3 }}>03</Text>
+                <Box style={{ width: 564, flexDirection: 'column' }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>看系统库在不在</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 8 }}>执行 show databases;，能看到 information_schema、mysql、performance_schema、sys 四个库，服务就是正常的。</Text>
+                </Box>
+            </Box>
+        </Box>
+
+        <Box style={{ width: 500, flexDirection: 'column' }}>
+            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>再建个库试一下读写</Text>
+            <Box style={{ background: '#F7F9FB', border: '1px solid #D8DEE6', padding: 20, marginTop: 16, flexDirection: 'column' }}>
+                <Text style={{ fontFamily: 'Consolas, monospace', fontSize: 15, color: '#1F3A5F', lineHeight: 1.9 }}>create database test charset utf8mb4;</Text>
+                <Text style={{ fontFamily: 'Consolas, monospace', fontSize: 15, color: '#1F3A5F', lineHeight: 1.9 }}>use test;</Text>
+                <Text style={{ fontFamily: 'Consolas, monospace', fontSize: 15, color: '#1F3A5F', lineHeight: 1.9 }}>create table t (id int, name varchar(20));</Text>
+                <Text style={{ fontFamily: 'Consolas, monospace', fontSize: 15, color: '#1F3A5F', lineHeight: 1.9 }}>insert into t values (1, '张三');</Text>
+                <Text style={{ fontFamily: 'Consolas, monospace', fontSize: 15, color: '#1F3A5F', lineHeight: 1.9 }}>select * from t;</Text>
+            </Box>
+            <Text style={{ fontSize: 16, color: '#5B6672', lineHeight: 1.7, marginTop: 14 }}>最后一条能把刚插进去的那行查出来，装库这件事就算过了。</Text>
+        </Box>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', background: '#EAF0F6', borderLeft: '3px solid #1F3A5F', padding: 18, marginTop: 24 }}>
+        <Text style={{ fontSize: 18, color: '#1F3A5F', lineHeight: 1.6 }}>能建库、能建表、能插能查，环境就装好了。这几条命令记下来，周会演示的时候直接用。</Text>
+    </Box>
+
+    <Text style={{ position: 'absolute', right: 60, bottom: 26, fontSize: 14, color: '#8A94A0' }}>05</Text>
+</Slide>

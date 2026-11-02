@@ -1,0 +1,50 @@
+<Slide style={{ width: 1280, height: 720, padding: 60, background: '#FFFFFF', flexDirection: 'column', fontFamily: '"Microsoft YaHei", Arial, sans-serif' }}>
+    <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#1F3A5F', lineHeight: 1.25 }}>数据库就是按规则存数据的仓库</Text>
+    <Box style={{ height: 1, background: '#D8DEE6', marginTop: 12 }} />
+
+    <Box style={{ flexDirection: 'row', gap: 40, marginTop: 28, height: 524 }}>
+        <Box style={{ width: 500, flexDirection: 'column' }}>
+            <Text style={{ fontSize: 20, color: '#22272E', lineHeight: 1.7 }}>数据库（Database）是按一定结构组织、长期存在计算机里、能被多个用户共享的数据集合。负责管理这些数据的软件叫数据库管理系统，MySQL 就是其中最常见的一种。</Text>
+
+            <Box style={{ flexDirection: 'column', marginTop: 24 }}>
+                <Box style={{ flexDirection: 'column', borderTop: '1px solid #D8DEE6', paddingTop: 14, paddingBottom: 14 }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>数据库（DB）</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 6 }}>真正存数据的地方，一个库里可以有很多张表。</Text>
+                </Box>
+                <Box style={{ flexDirection: 'column', borderTop: '1px solid #D8DEE6', paddingTop: 14, paddingBottom: 14 }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>数据库管理系统（MySQL）</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 6 }}>负责建表、存数、查数、管权限的软件，我们平时说的"装数据库"其实是装它。</Text>
+                </Box>
+                <Box style={{ flexDirection: 'column', borderTop: '1px solid #D8DEE6', borderBottom: '1px solid #D8DEE6', paddingTop: 14, paddingBottom: 14 }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>SQL 语句</Text>
+                    <Text style={{ fontSize: 18, color: '#5B6672', lineHeight: 1.6, marginTop: 6 }}>跟数据库说话的语言，增、删、改、查都靠它。</Text>
+                </Box>
+            </Box>
+        </Box>
+
+        <Box style={{ width: 620, flexDirection: 'column' }}>
+            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#22272E' }}>和 Excel 比，差别在四个地方</Text>
+            <Box style={{ border: '1px solid #D8DEE6', marginTop: 16 }}>
+                <Table
+                    style={{ width: '100%', height: 320 }}
+                    defaultTextStyle={{ fontSize: 16, textAlign: 'left', color: '#22272E' }}
+                    defaultCellStyle={{ padding: 12, border: { bottom: { width: 1, color: '#E3E8EE' } } }}
+                    cells={[
+                        [
+                            { text: '对比项', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                            { text: 'Excel 表格', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                            { text: '数据库', textStyle: { bold: true, color: '#FFFFFF' }, cellStyle: { background: { color: '#1F3A5F' } } },
+                        ],
+                        ['数据量', '几万行就开始卡', '上百万行照样能查'],
+                        ['多人同时改', '容易互相覆盖，版本乱', '用事务保证不出错'],
+                        ['权限控制', '整个文件给或不给', '能精确到某张表某个字段'],
+                        ['查询统计', '靠筛选和公式，一行行算', '一条 SQL 就能多表关联统计'],
+                    ]}
+                />
+            </Box>
+            <Text style={{ fontSize: 18, color: '#22272E', lineHeight: 1.7, marginTop: 20 }}>数据量小、就自己一个人用，Excel 完全够；一旦要多人同时读写、还要保证数据不出错，就得上数据库。</Text>
+        </Box>
+    </Box>
+
+    <Text style={{ position: 'absolute', right: 60, bottom: 26, fontSize: 14, color: '#8A94A0' }}>02</Text>
+</Slide>

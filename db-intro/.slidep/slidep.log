@@ -1,0 +1,17 @@
+=== boot pid=10932 ts=2026-10-29 21:09:26.452 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js create 数据库简介.pptx ===
+[2026-10-29 21:09:26.452] [INFO ] [pid=10932] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+=== boot pid=68592 ts=2026-10-29 21:09:56.418 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 数据库简介.pptx --dsl-file slides/01.slide ===
+[2026-10-29 21:09:56.418] [INFO ] [pid=68592] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+[2026-10-29 21:09:56.471] [INFO ] [pid=68592] [slide-version] fileId=sid_mvtk version=0 filePath=D:\webpage\111\db-intro\数据库简介.pptx
+=== boot pid=50088 ts=2026-10-29 21:10:16.250 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 数据库简介.pptx --dsl-file slides/02.slide ===
+[2026-10-29 21:10:16.249] [INFO ] [pid=50088] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+[2026-10-29 21:10:16.298] [INFO ] [pid=50088] [slide-version] fileId=sid_mvtk version=1 filePath=D:\webpage\111\db-intro\数据库简介.pptx
+=== boot pid=49408 ts=2026-10-29 21:10:37.129 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 数据库简介.pptx --dsl-file slides/03.slide ===
+[2026-10-29 21:10:37.128] [INFO ] [pid=49408] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+[2026-10-29 21:10:37.176] [INFO ] [pid=49408] [slide-version] fileId=sid_mvtk version=2 filePath=D:\webpage\111\db-intro\数据库简介.pptx
+=== boot pid=50352 ts=2026-10-29 21:10:51.694 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 数据库简介.pptx --dsl-file slides/04.slide ===
+[2026-10-29 21:10:51.694] [INFO ] [pid=50352] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+[2026-10-29 21:10:51.740] [INFO ] [pid=50352] [slide-version] fileId=sid_mvtk version=3 filePath=D:\webpage\111\db-intro\数据库简介.pptx
+=== boot pid=65968 ts=2026-10-29 21:11:08.193 cwd=D:\webpage\111\db-intro argv=C:\Users\Lenovo\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 数据库简介.pptx --dsl-file slides/05.slide ===
+[2026-10-29 21:11:08.192] [INFO ] [pid=65968] [server-url] baseUrl=http://localhost:39099 source=portFile(C:\Users\Lenovo\.workbuddy\tencent-docs-engine.port)
+[2026-10-29 21:11:08.238] [INFO ] [pid=65968] [slide-version] fileId=sid_mvtk version=4 filePath=D:\webpage\111\db-intro\数据库简介.pptx

@@ -1,0 +1,14 @@
+<Slide style={{ width: 1280, height: 720, padding: 60, background: '#FFFFFF', flexDirection: 'column', justifyContent: 'space-between', fontFamily: '"Microsoft YaHei", Arial, sans-serif' }}>
+    <Box style={{ position: 'absolute', left: 60, top: 60, width: 56, height: 4, background: '#1F3A5F' }} />
+
+    <Box style={{ flexDirection: 'column', marginTop: 120 }}>
+        <Text style={{ fontSize: 16, color: '#5B6672', letterSpacing: 2 }}>《高级网页设计》课程 · 小组分享</Text>
+        <Text style={{ fontSize: 64, fontWeight: 'bold', color: '#1F3A5F', lineHeight: 1.2, marginTop: 16 }}>数据库简介</Text>
+        <Text style={{ fontSize: 22, color: '#5B6672', lineHeight: 1.6, marginTop: 22 }}>从概念、增删改查，到 MySQL 装完怎么验证</Text>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid #D8DEE6', paddingTop: 16 }}>
+        <Text style={{ fontSize: 14, color: '#5B6672' }}>第 3 组 · 张淮皓</Text>
+        <Text style={{ fontSize: 14, color: '#5B6672' }}>2026 年 10 月</Text>
+    </Box>
+</Slide>
