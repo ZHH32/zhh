@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网易新闻头部导航</title>
+    <style>
+        /* ========== 全局 CSS ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f5f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 16px;
+        }
+        /* ========== 模块 CSS（类名均含姓名缩写 zhh） ========== */
+        .zhh_header {
+            width: 825px;
+            background: #fff;
+            padding: 0 24px;
+        }
+
+        /* Logo：直接使用从原图裁剪的标志图片 */
+        .zhh_logoRow {
+            padding: 14px 0 10px;
+        }
+        .zhh_logoImg {
+            height: 34px;
+            display: block;
+        }
+
+        /* 导航菜单行：底部红色细线，点击项变红 */
+        .zhh_nav {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ec5a5a;
+            padding-bottom: 0;
+        }
+        .zhh_navItem {
+            font-size: 15px;
+            color: #404040;
+            padding: 12px 14px;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            transition: color .2s;
+        }
+        .zhh_navItem:hover { color: #d43d3d; }
+        .zhh_navItem.zhh_on { color: #d43d3d; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-04，使用的大模型：GLM-5.3-Flash，功能名称：网易新闻头部导航 -->
+    <header class="zhh_header">
+        <div class="zhh_logoRow">
+            <img class="zhh_logoImg" src="img/zhh_logo_news.png" alt="网易新闻">
+        </div>
+        <nav class="zhh_nav">
+            <span class="zhh_navItem zhh_on">首页</span>
+            <span class="zhh_navItem">国内</span>
+            <span class="zhh_navItem">国际</span>
+            <span class="zhh_navItem">数读</span>
+            <span class="zhh_navItem">军事</span>
+            <span class="zhh_navItem">航空</span>
+            <span class="zhh_navItem">传媒科技研究院</span>
+            <span class="zhh_navItem">政务</span>
+            <span class="zhh_navItem">公益</span>
+            <span class="zhh_navItem">媒体</span>
+            <span class="zhh_navItem">王三三</span>
+        </nav>
+    </header>
+
+    <script>
+        // 点击导航项：切换红色选中态
+        function zhh_initNav() {
+            var zhh_items = document.querySelector(".zhh_nav").children;
+            for (var zhh_i = 0; zhh_i < zhh_items.length; zhh_i++) {
+                zhh_items[zhh_i].onclick = function () {
+                    for (var zhh_j = 0; zhh_j < zhh_items.length; zhh_j++) {
+                        zhh_items[zhh_j].className = "zhh_navItem";
+                    }
+                    this.className = "zhh_navItem zhh_on";
+                };
+            }
+        }
+        zhh_initNav();
+    </script>
+</body>
+</html>

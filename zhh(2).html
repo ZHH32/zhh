@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻页签列表模块</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ========== 全局 CSS ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f5f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+        /* ========== 模块 CSS（类名均含姓名缩写 zhh） ========== */
+        .zhh_module { width: 520px; background: #fff; padding: 0 20px 6px; }
+
+        /* 页签栏：整行带红色下划线，选中页签为红色块 */
+        .zhh_tabs {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ec5a5a;
+        }
+        .zhh_tab {
+            padding: 11px 13px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+            transition: color .2s;
+        }
+        .zhh_tab:hover { color: #d43d3d; }
+        .zhh_tab.zhh_on { background: #d43d3d; color: #fff; }
+        .zhh_tab.zhh_on:hover { color: #fff; }
+        .zhh_more {
+            margin-left: auto;
+            color: #888;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .zhh_more:hover { color: #d43d3d; }
+        .zhh_more i {
+            width: 0; height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid currentColor;
+            margin-left: 4px;
+        }
+
+        /* 新闻列表：紧凑条目 */
+        .zhh_list { transition: opacity .25s; }
+        .zhh_list.zhh_fading { opacity: 0; }
+        .zhh_item {
+            display: flex;
+            padding: 13px 0 12px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .zhh_item:last-child { border-bottom: none; }
+        .zhh_thumb {
+            width: 110px;
+            height: 74px;
+            flex: none;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .zhh_thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* 蓝色"最新消息"图形缩略图，用 CSS 还原 */
+        .zhh_latest {
+            width: 100%; height: 100%;
+            background: linear-gradient(160deg, #2f8be0, #0e57b4);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: 3px;
+        }
+        .zhh_info { flex: 1; min-width: 0; margin-left: 12px; }
+        .zhh_title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #333;
+            line-height: 1.4;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .zhh_title:hover { color: #d43d3d; }
+        .zhh_meta {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        .zhh_tag {
+            padding: 1px 5px;
+            background: #f5f5f5;
+            border-radius: 2px;
+            color: #888;
+            margin-right: 7px;
+        }
+        .zhh_sep { margin: 0 7px 0 1px; color: #ddd; }
+        .zhh_counts { margin-left: auto; color: #b0b0b0; }
+        .zhh_counts .iconfont { font-size: 13px; margin: 0 3px 0 10px; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-04，使用的大模型：GLM-5.3-Flash，功能名称：新闻页签列表模块 -->
+    <div class="zhh_module">
+        <div class="zhh_tabs">
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_yw')">要闻</div>
+            <div class="zhh_tab zhh_on" onclick="zhh_switchTab(this, 'zhh_dl')">大连</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_gn')">国内</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_gj')">国际</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_dj')">独家</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_js')">军事</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_cj')">财经</div>
+            <div class="zhh_tab" onclick="zhh_switchTab(this, 'zhh_kj')">科技</div>
+            <div class="zhh_more">更多<i></i></div>
+        </div>
+        <div class="zhh_list"></div>
+    </div>
+
+    <script>
+        // 各页签新闻数据：img 为 "zhh_latest" 时表示蓝色"最新消息"图形缩略图
+        var zhh_data = {
+            zhh_dl: [
+                { zhh_img: "img/zhh_news_map.png", zhh_title: "7日中甲联赛金州体育场周边临时交通管理", zhh_tags: ["金州", "解放路"], zhh_time: "1天前" },
+                { zhh_img: "zhh_latest", zhh_title: "大连甘井子区人民法院发布执行悬赏公告", zhh_tags: ["大连", "甘井子"], zhh_time: "1天前" },
+                { zhh_img: "img/zhh_news_sparrow.png", zhh_title: "深秋麻雀进入集群觅食期 提醒：不投喂、不驱赶", zhh_tags: ["麻雀", "候鸟"], zhh_time: "1天前" },
+                { zhh_img: "zhh_latest", zhh_title: "国际油价大跌 ↘", zhh_tags: ["国际", "油价"], zhh_time: "1天前" },
+                { zhh_img: "img/zhh_news_pond.png", zhh_title: "大连劳动公园荷花池“大扫除”集中清理", zhh_tags: ["荷池", "清理"], zhh_time: "2天前" },
+                { zhh_img: "img/zhh_news_farm.png", zhh_title: "庄河长岭镇260亩荞麦开镰 亩产增收创新高", zhh_tags: ["庄河", "农业"], zhh_time: "2天前" }
+            ],
+            zhh_yw: [
+                { zhh_img: "zhh_latest", zhh_title: "全国秋粮收获已过八成，全年丰收成色十足", zhh_tags: ["农业", "要闻"], zhh_time: "1小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "新一轮冷空气来袭，多地迎今秋首场降雪", zhh_tags: ["气象"], zhh_time: "3小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "神舟乘组状态良好，空间站各项实验有序展开", zhh_tags: ["航天"], zhh_time: "6小时前" }
+            ],
+            zhh_gn: [
+                { zhh_img: "zhh_latest", zhh_title: "京雄高速全线通车，北京至雄安1小时可达", zhh_tags: ["交通"], zhh_time: "5小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "多地上调最低工资标准，部分地区超2500元", zhh_tags: ["民生"], zhh_time: "8小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "第九届丝绸之路国际博览会在西安开幕", zhh_tags: ["会展"], zhh_time: "昨天" }
+            ],
+            zhh_gj: [
+                { zhh_img: "zhh_latest", zhh_title: "联合国气候变化大会达成新一轮减排共识", zhh_tags: ["国际"], zhh_time: "4小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "欧洲央行宣布维持三大关键利率不变", zhh_tags: ["财经"], zhh_time: "7小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "日本本州东岸近海发生5.8级地震，无海啸风险", zhh_tags: ["快讯"], zhh_time: "昨天" }
+            ],
+            zhh_dj: [
+                { zhh_img: "zhh_latest", zhh_title: "独家对话：乡村振兴一线的年轻人", zhh_tags: ["独家"], zhh_time: "10小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "记者调查：新能源充电桩进小区为何这么难", zhh_tags: ["调查"], zhh_time: "昨天" },
+                { zhh_img: "zhh_latest", zhh_title: "实地探访：老字号如何玩转新零售", zhh_tags: ["探访"], zhh_time: "2天前" }
+            ],
+            zhh_js: [
+                { zhh_img: "zhh_latest", zhh_title: "中国海军第45批护航编队完成任务返回军港", zhh_tags: ["海军"], zhh_time: "6小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "空军航空开放活动多型战机集中亮相", zhh_tags: ["空军"], zhh_time: "9小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "全军部队掀起新年度实战化练兵热潮", zhh_tags: ["演练"], zhh_time: "昨天" }
+            ],
+            zhh_cj: [
+                { zhh_img: "zhh_latest", zhh_title: "前三季度全国规上工业企业利润结构持续优化", zhh_tags: ["统计局"], zhh_time: "2小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "人民币对美元汇率升破7.1关口", zhh_tags: ["外汇"], zhh_time: "5小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "多个城市宣布取消首套房贷利率下限", zhh_tags: ["楼市"], zhh_time: "8小时前" }
+            ],
+            zhh_kj: [
+                { zhh_img: "zhh_latest", zhh_title: "我国成功发射遥感四十三号卫星", zhh_tags: ["航天"], zhh_time: "3小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "国产大飞机C929研制取得重要进展", zhh_tags: ["大飞机"], zhh_time: "6小时前" },
+                { zhh_img: "zhh_latest", zhh_title: "人工智能大模型标准化体系建设正式启动", zhh_tags: ["AI"], zhh_time: "昨天" }
+            ]
+        };
+
+        // 生成单条新闻
+        function zhh_makeItem(zhh_it) {
+            var zhh_thumb;
+            if (zhh_it.zhh_img === "zhh_latest") {
+                zhh_thumb = '<div class="zhh_latest"><span>最新</span><span>消息</span></div>';
+            } else {
+                zhh_thumb = '<img src="' + zhh_it.zhh_img + '" alt="新闻配图">';
+            }
+            var zhh_tags = "";
+            for (var zhh_i = 0; zhh_i < zhh_it.zhh_tags.length; zhh_i++) {
+                zhh_tags += '<span class="zhh_tag">' + zhh_it.zhh_tags[zhh_i] + '</span>';
+            }
+            return '<div class="zhh_item">'
+                 +   '<div class="zhh_thumb">' + zhh_thumb + '</div>'
+                 +   '<div class="zhh_info">'
+                 +     '<h3 class="zhh_title">' + zhh_it.zhh_title + '</h3>'
+                 +     '<div class="zhh_meta">' + zhh_tags
+                 +       '<span class="zhh_sep">|</span><span>' + zhh_it.zhh_time + '</span>'
+                 +       '<span class="zhh_counts">'
+                 +         '<i class="iconfont icon-dianzan"></i>0'
+                 +         '<i class="iconfont icon-bianji"></i>0'
+                 +       '</span>'
+                 +     '</div>'
+                 +   '</div>'
+                 + '</div>';
+        }
+
+        // 渲染指定页签的新闻列表
+        function zhh_render(zhh_key) {
+            var zhh_list = zhh_data[zhh_key];
+            var zhh_html = "";
+            for (var zhh_i = 0; zhh_i < zhh_list.length; zhh_i++) {
+                zhh_html += zhh_makeItem(zhh_list[zhh_i]);
+            }
+            document.querySelector(".zhh_list").innerHTML = zhh_html;
+        }
+
+        // 页签切换：换高亮并淡入对应内容
+        function zhh_switchTab(zhh_el, zhh_key) {
+            var zhh_tabList = document.querySelector(".zhh_tabs").children;
+            for (var zhh_i = 0; zhh_i < zhh_tabList.length; zhh_i++) {
+                if (zhh_tabList[zhh_i].className.indexOf("zhh_more") !== -1) { continue; }
+                zhh_tabList[zhh_i].className = "zhh_tab";
+            }
+            zhh_el.className = "zhh_tab zhh_on";
+
+            var zhh_box = document.querySelector(".zhh_list");
+            zhh_box.classList.add("zhh_fading");
+            setTimeout(function () {
+                zhh_render(zhh_key);
+                zhh_box.classList.remove("zhh_fading");
+            }, 250);
+        }
+
+        // 默认显示"大连"页签（与截图一致）
+        zhh_render("zhh_dl");
+    </script>
+</body>
+</html>
