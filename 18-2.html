@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书销售系统架构图 · Canvas 绘制</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1160px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 24px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            margin-bottom: 18px;
+            border-top: 4px solid #6366f1;
+        }
+        .zhh_card h2 { font-size: 17px; margin-bottom: 10px; }
+
+        .zhh_toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+            transition: opacity .2s, transform .2s;
+        }
+        .zhh_btn:hover { opacity: .85; transform: translateY(-2px); }
+        .zhh_info {
+            font-size: 13px;
+            color: #6b7280;
+            margin-left: auto;
+        }
+        .zhh_info b { color: #6366f1; }
+
+        canvas#zhh_arch {
+            display: block;
+            width: 100%;
+            max-width: 1120px;
+            height: auto;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .zhh_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            justify-content: center;
+        }
+        .zhh_leg {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .zhh_leg span {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.9;
+            white-space: pre-wrap;
+        }
+        .zhh_code b { color: #6366f1; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-05，使用的大模型：GLM-5.3-Flash，功能名称：Canvas 绘制图书销售系统全站架构图 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>图书销售系统 · 全站架构图</h1>
+            <p>张淮皓的JavaScript · 用 Canvas API 逐层绘制系统架构，支持动画播放与悬停查看</p>
+        </div>
+
+        <div class="zhh_card">
+            <div class="zhh_toolbar">
+                <button class="zhh_btn" onclick="zhh_replay()">重新播放动画</button>
+                <span class="zhh_info" id="zhh_info">鼠标悬停架构图中的组件查看详情</span>
+            </div>
+            <canvas id="zhh_arch" width="1120" height="660"></canvas>
+            <div class="zhh_legend" id="zhh_legend"></div>
+        </div>
+
+        <div class="zhh_card">
+            <h2>架构说明</h2>
+            <div class="zhh_code"><b>用户层</b>　　PC 端、H5/APP、微信小程序 —— 读者购书入口
+<b>接入层</b>　　CDN 加速静态资源、Nginx 负载均衡、API 网关统一鉴权与限流
+<b>应用服务层</b>　用户/图书/订单/支付/购物车/搜索/评价 七大微服务，各自独立部署
+<b>中间件层</b>　Redis 做缓存与会话、RabbitMQ 异步处理下单/发货、ES 全文检索图书
+<b>数据存储层</b>　MySQL 主从存核心业务、MongoDB 存日志与浏览记录、OSS 存图书封面
+<b>第三方服务</b>　支付宝/微信支付网关、物流配送追踪、短信验证码与通知</div>
+        </div>
+    </div>
+
+    <script>
+        var zhh_cv = document.getElementById("zhh_arch");
+        var zhh_ctx = zhh_cv.getContext("2d");
+        var zhh_W = zhh_cv.width;
+        var zhh_H = zhh_cv.height;
+
+        /* ===== 架构数据 ===== */
+        var zhh_layers = [
+            { name: "用户层", color: "#6366f1", y: 70,
+              boxes: [["PC 端", "Web 浏览器"], ["H5 / APP", "移动端"], ["微信小程序", "微信生态"]] },
+            { name: "接入层", color: "#0ea5e9", y: 165,
+              boxes: [["CDN", "静态加速"], ["负载均衡", "Nginx"], ["API 网关", "鉴权 / 限流"]] },
+            { name: "应用服务层", color: "#ec4899", y: 260,
+              boxes: [["用户服务", "登录 / 会员"], ["图书服务", "书目 / 库存"], ["订单服务", "下单 / 履约"],
+                      ["支付服务", "收银 / 对账"], ["购物车", "合并 / 结算"], ["搜索服务", "图书检索"],
+                      ["评价服务", "书评 / 评分"]] },
+            { name: "中间件层", color: "#f59e0b", y: 370,
+              boxes: [["Redis", "缓存 / 会话"], ["RabbitMQ", "异步消息"], ["Elasticsearch", "全文检索"]] },
+            { name: "数据存储层", color: "#10b981", y: 465,
+              boxes: [["MySQL", "主从集群"], ["MongoDB", "日志 / 文档"], ["OSS", "图书封面"]] },
+            { name: "第三方服务", color: "#8b5cf6", y: 560,
+              boxes: [["支付宝 / 微信", "支付网关"], ["物流配送", "快递追踪"], ["短信服务", "验证 / 通知"]] }
+        ];
+
+        var zhh_BOX_H = 64;
+        var zhh_GAP = 10;
+        var zhh_LEFT = 140;    // 框图区域起点
+        var zhh_RIGHT = 30;    // 右边距
+        var zhh_AVAIL = zhh_W - zhh_LEFT - zhh_RIGHT;
+
+        // 计算每个 box 的位置
+        for (var li = 0; li < zhh_layers.length; li++) {
+            var layer = zhh_layers[li];
+            layer.boxes = layer.boxes.map(function (item, i) {
+                var n = layer.boxes.length;
+                var bw = (zhh_AVAIL - (n - 1) * zhh_GAP) / n;
+                var bx = zhh_LEFT + i * (bw + zhh_GAP);
+                return {
+                    title: item[0], sub: item[1],
+                    x: bx, y: layer.y, w: bw, h: zhh_BOX_H,
+                    color: layer.color,
+                    fill: layer.color + "15",
+                    fillHover: layer.color + "30",
+                    border: layer.color + "80"
+                };
+            });
+        }
+
+        /* ===== 动画状态 ===== */
+        var zhh_progress = 0;
+        var zhh_startTime = 0;
+        var zhh_ANIM_DUR = 2200;
+        var zhh_animating = false;
+        var zhh_hovered = null;
+
+        /* ===== 工具：圆角矩形 ===== */
+        function zhh_roundRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.arcTo(x + w, y, x + w, y + r, r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+            ctx.lineTo(x + r, y + h);
+            ctx.arcTo(x, y + h, x, y + h - r, r);
+            ctx.lineTo(x, y + r);
+            ctx.arcTo(x, y, x + r, y, r);
+            ctx.closePath();
+        }
+
+        /* ===== 绘制单个 box ===== */
+        function zhh_drawBox(box, alpha) {
+            var hovered = (zhh_hovered && zhh_hovered.box === box);
+            zhh_ctx.globalAlpha = alpha;
+
+            zhh_roundRect(zhh_ctx, box.x, box.y, box.w, box.h, 8);
+            zhh_ctx.fillStyle = hovered ? box.fillHover : box.fill;
+            zhh_ctx.fill();
+            zhh_ctx.strokeStyle = hovered ? box.color : box.border;
+            zhh_ctx.lineWidth = hovered ? 2.5 : 1.5;
+            zhh_ctx.stroke();
+
+            // 高亮时加发光
+            if (hovered) {
+                zhh_ctx.shadowColor = box.color;
+                zhh_ctx.shadowBlur = 12;
+                zhh_ctx.stroke();
+                zhh_ctx.shadowBlur = 0;
+            }
+
+            // 标题
+            zhh_ctx.fillStyle = "#1f2937";
+            zhh_ctx.font = "bold 14px 'Microsoft YaHei'";
+            zhh_ctx.textAlign = "center";
+            zhh_ctx.textBaseline = "middle";
+            zhh_ctx.fillText(box.title, box.x + box.w / 2, box.y + 22);
+
+            // 副标题
+            zhh_ctx.fillStyle = "#6b7280";
+            zhh_ctx.font = "11px 'Microsoft YaHei'";
+            zhh_ctx.fillText(box.sub, box.x + box.w / 2, box.y + 44);
+
+            zhh_ctx.globalAlpha = 1;
+        }
+
+        /* ===== 绘制层标签 ===== */
+        function zhh_drawLabel(layer, alpha) {
+            zhh_ctx.globalAlpha = alpha;
+            // 竖条
+            zhh_ctx.fillStyle = layer.color;
+            zhh_ctx.fillRect(120, layer.y, 4, zhh_BOX_H);
+            // 文字
+            zhh_ctx.font = "bold 14px 'Microsoft YaHei'";
+            zhh_ctx.textAlign = "left";
+            zhh_ctx.textBaseline = "middle";
+            zhh_ctx.fillText(layer.name, 20, layer.y + zhh_BOX_H / 2);
+            zhh_ctx.globalAlpha = 1;
+        }
+
+        /* ===== 绘制层间连接线（总线式） ===== */
+        function zhh_drawConn(layerA, layerB, alpha) {
+            zhh_ctx.globalAlpha = alpha * 0.35;
+            zhh_ctx.strokeStyle = "#cbd5e1";
+            zhh_ctx.lineWidth = 1;
+
+            var bottomA = layerA.y + zhh_BOX_H;
+            var topB = layerB.y;
+            var midY = (bottomA + topB) / 2;
+
+            // 找总线左右端
+            var minCx = Infinity, maxCx = -Infinity;
+            for (var i = 0; i < layerA.boxes.length; i++) {
+                var cx = layerA.boxes[i].x + layerA.boxes[i].w / 2;
+                if (cx < minCx) minCx = cx;
+                if (cx > maxCx) maxCx = cx;
+            }
+            for (var i = 0; i < layerB.boxes.length; i++) {
+                var cx = layerB.boxes[i].x + layerB.boxes[i].w / 2;
+                if (cx < minCx) minCx = cx;
+                if (cx > maxCx) maxCx = cx;
+            }
+
+            // 总线
+            zhh_ctx.beginPath();
+            zhh_ctx.moveTo(minCx, midY);
+            zhh_ctx.lineTo(maxCx, midY);
+            zhh_ctx.stroke();
+
+            // 上层 box → 总线
+            for (var i = 0; i < layerA.boxes.length; i++) {
+                var b = layerA.boxes[i];
+                zhh_ctx.beginPath();
+                zhh_ctx.moveTo(b.x + b.w / 2, b.y + b.h);
+                zhh_ctx.lineTo(b.x + b.w / 2, midY);
+                zhh_ctx.stroke();
+            }
+            // 总线 → 下层 box
+            for (var i = 0; i < layerB.boxes.length; i++) {
+                var b = layerB.boxes[i];
+                zhh_ctx.beginPath();
+                zhh_ctx.moveTo(b.x + b.w / 2, midY);
+                zhh_ctx.lineTo(b.x + b.w / 2, b.y);
+                zhh_ctx.stroke();
+            }
+            zhh_ctx.globalAlpha = 1;
+        }
+
+        /* ===== 计算层透明度（逐层出现） ===== */
+        function zhh_layerAlpha(i) {
+            var start = i * 0.12;
+            var dur = 0.22;
+            return Math.max(0, Math.min(1, (zhh_progress - start) / dur));
+        }
+
+        /* ===== 主绘制函数 ===== */
+        function zhh_draw() {
+            zhh_ctx.clearRect(0, 0, zhh_W, zhh_H);
+
+            // 标题
+            zhh_ctx.fillStyle = "#1f2937";
+            zhh_ctx.font = "bold 22px 'Microsoft YaHei'";
+            zhh_ctx.textAlign = "center";
+            zhh_ctx.textBaseline = "top";
+            zhh_ctx.fillText("图书销售系统 · 全站架构图", zhh_W / 2, 12);
+            zhh_ctx.fillStyle = "#9ca3af";
+            zhh_ctx.font = "12px 'Microsoft YaHei'";
+            zhh_ctx.fillText("Canvas 绘制 · 张淮皓", zhh_W / 2, 40);
+
+            // 连接线
+            for (var i = 0; i < zhh_layers.length - 1; i++) {
+                var aA = zhh_layerAlpha(i);
+                var aB = zhh_layerAlpha(i + 1);
+                if (aA > 0.3 && aB > 0.3) {
+                    zhh_drawConn(zhh_layers[i], zhh_layers[i + 1], Math.min(aA, aB));
+                }
+            }
+
+            // 层标签 + box
+            for (var i = 0; i < zhh_layers.length; i++) {
+                var a = zhh_layerAlpha(i);
+                if (a <= 0) continue;
+                zhh_drawLabel(zhh_layers[i], a);
+                for (var j = 0; j < zhh_layers[i].boxes.length; j++) {
+                    zhh_drawBox(zhh_layers[i].boxes[j], a);
+                }
+            }
+        }
+
+        /* ===== 动画循环 ===== */
+        function zhh_animate(ts) {
+            zhh_animating = true;
+            if (!zhh_startTime) zhh_startTime = ts;
+            var elapsed = ts - zhh_startTime;
+            zhh_progress = Math.min(1, elapsed / zhh_ANIM_DUR);
+            zhh_draw();
+            if (zhh_progress < 1) {
+                requestAnimationFrame(zhh_animate);
+            } else {
+                zhh_animating = false;
+            }
+        }
+
+        function zhh_replay() {
+            zhh_startTime = 0;
+            zhh_progress = 0;
+            zhh_hovered = null;
+            document.getElementById("zhh_info").innerHTML = "鼠标悬停架构图中的组件查看详情";
+            requestAnimationFrame(zhh_animate);
+        }
+
+        /* ===== 鼠标悬停 ===== */
+        zhh_cv.addEventListener("mousemove", function (e) {
+            var rect = zhh_cv.getBoundingClientRect();
+            var mx = (e.clientX - rect.left) * (zhh_W / rect.width);
+            var my = (e.clientY - rect.top) * (zhh_H / rect.height);
+
+            zhh_hovered = null;
+            for (var i = 0; i < zhh_layers.length; i++) {
+                for (var j = 0; j < zhh_layers[i].boxes.length; j++) {
+                    var b = zhh_layers[i].boxes[j];
+                    if (mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+                        zhh_hovered = { layer: zhh_layers[i], box: b };
+                        break;
+                    }
+                }
+                if (zhh_hovered) break;
+            }
+
+            var info = document.getElementById("zhh_info");
+            if (zhh_hovered) {
+                info.innerHTML = zhh_hovered.layer.name + " → <b>" + zhh_hovered.box.title +
+                    "</b>：" + zhh_hovered.box.sub;
+                zhh_cv.style.cursor = "pointer";
+            } else {
+                info.innerHTML = "鼠标悬停架构图中的组件查看详情";
+                zhh_cv.style.cursor = "default";
+            }
+
+            if (!zhh_animating) zhh_draw();
+        });
+
+        zhh_cv.addEventListener("mouseleave", function () {
+            zhh_hovered = null;
+            document.getElementById("zhh_info").innerHTML = "鼠标悬停架构图中的组件查看详情";
+            if (!zhh_animating) zhh_draw();
+        });
+
+        /* ===== 图例 ===== */
+        function zhh_buildLegend() {
+            var html = "";
+            for (var i = 0; i < zhh_layers.length; i++) {
+                html += '<div class="zhh_leg"><span style="background:' +
+                    zhh_layers[i].color + '"></span>' + zhh_layers[i].name + '</div>';
+            }
+            document.getElementById("zhh_legend").innerHTML = html;
+        }
+
+        // 初始化
+        zhh_buildLegend();
+        requestAnimationFrame(zhh_animate);
+    </script>
+</body>
+</html>

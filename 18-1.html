@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 动画 · 张淮皓</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 980px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 24px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            margin-bottom: 18px;
+            border-top: 4px solid #6366f1;
+        }
+        .zhh_c_b { border-top-color: #ec4899; }
+        .zhh_c_c { border-top-color: #10b981; }
+        .zhh_card h2 { font-size: 17px; margin-bottom: 4px; }
+        .zhh_card p.zhh_tip { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            background: #6366f1;
+        }
+        .zhh_tag_b { background: #ec4899; }
+        .zhh_tag_c { background: #10b981; }
+        canvas {
+            display: block;
+            width: 100%;
+            background: #0f172a;
+            border-radius: 10px;
+        }
+        .zhh_cvA { height: 320px; cursor: crosshair; }
+        .zhh_cvB { height: 200px; }
+        .zhh_cvC { height: 240px; }
+        .zhh_row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .zhh_btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: #fff;
+            background: #6366f1;
+            cursor: pointer;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .zhh_btn:hover { opacity: .85; }
+        .zhh_btn_ghost { background: #9ca3af; }
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .zhh_code b { color: #6366f1; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-05，使用的大模型：GLM-5.3-Flash，功能名称：Canvas 动画展示（粒子文字/渐变文字/文字雨） -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>Canvas 动画 · 张淮皓</h1>
+            <p>张淮皓的JavaScript · 用原生 Canvas API 做三种动画，主角文字都是「张淮皓」</p>
+        </div>
+
+        <!-- 动画一：粒子文字 -->
+        <div class="zhh_card">
+            <span class="zhh_tag">粒子文字</span>
+            <h2>粒子拼成「张淮皓」</h2>
+            <p class="zhh_tip">移动鼠标可以推开粒子，鼠标移开后粒子重新聚拢成文字</p>
+            <canvas class="zhh_cvA" id="zhh_cvA" width="940" height="320"></canvas>
+            <div class="zhh_row">
+                <button class="zhh_btn" onclick="zhh_explode()">打散一下</button>
+                <button class="zhh_btn zhh_btn_ghost" onclick="zhh_gather()">重新聚拢</button>
+            </div>
+        </div>
+
+        <!-- 动画二：渐变脉冲文字 -->
+        <div class="zhh_card zhh_c_b">
+            <span class="zhh_tag zhh_tag_b">渐变描边</span>
+            <h2>渐变脉冲文字</h2>
+            <p class="zhh_tip">createLinearGradient 配合 sin 缩放，让文字颜色与大小一起呼吸</p>
+            <canvas class="zhh_cvB" id="zhh_cvB" width="940" height="200"></canvas>
+        </div>
+
+        <!-- 动画三：文字雨 -->
+        <div class="zhh_card zhh_c_c">
+            <span class="zhh_tag zhh_tag_c">文字雨</span>
+            <h2>「张淮皓」文字雨</h2>
+            <p class="zhh_tip">每列不断下落，颜色随机，类似代码雨效果</p>
+            <canvas class="zhh_cvC" id="zhh_cvC" width="940" height="240"></canvas>
+        </div>
+
+        <!-- 说明 -->
+        <div class="zhh_card">
+            <span class="zhh_tag">核心 API</span>
+            <h2>本页用到的 Canvas API</h2>
+            <div class="zhh_code"><b>getContext('2d')</b>                 获取 2D 绘图上下文
+<b>fillText / strokeText</b>             填充 / 描边文字
+<b>createLinearGradient</b>              创建线性渐变
+<b>getImageData</b>                      读取像素（粒子文字用它采样文字轮廓）
+<b>clearRect</b>                         清空画布（每帧重绘前调用）
+<b>requestAnimationFrame</b>            浏览器刷新率驱动动画循环
+<b>arc / fillRect</b>                    画圆点 / 矩形粒子</div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 动画一：粒子文字「张淮皓」 ===== */
+        var zhh_cvA = document.getElementById("zhh_cvA");
+        var zhh_ctxA = zhh_cvA.getContext("2d");
+        var zhh_parts = [];
+        var zhh_mouseA = { x: -9999, y: -9999 };
+
+        function zhh_buildParticles() {
+            // 离屏画一张大字图，按像素采样得到文字轮廓
+            var zhh_off = document.createElement("canvas");
+            zhh_off.width = zhh_cvA.width;
+            zhh_off.height = zhh_cvA.height;
+            var zhh_oc = zhh_off.getContext("2d");
+            zhh_oc.fillStyle = "#fff";
+            zhh_oc.textAlign = "center";
+            zhh_oc.textBaseline = "middle";
+            zhh_oc.font = "bold 150px 'Microsoft YaHei'";
+            zhh_oc.fillText("张淮皓", zhh_off.width / 2, zhh_off.height / 2);
+
+            var zhh_img = zhh_oc.getImageData(0, 0, zhh_off.width, zhh_off.height).data;
+            var zhh_gap = 5;
+            zhh_parts = [];
+            for (var y = 0; y < zhh_off.height; y += zhh_gap) {
+                for (var x = 0; x < zhh_off.width; x += zhh_gap) {
+                    var zhh_i = (y * zhh_off.width + x) * 4;
+                    if (zhh_img[zhh_i + 3] > 128) {
+                        zhh_parts.push({
+                            x: Math.random() * zhh_cvA.width,
+                            y: Math.random() * zhh_cvA.height,
+                            tx: x, ty: y,
+                            hue: 200 + Math.random() * 160,
+                            r: 1.6
+                        });
+                    }
+                }
+            }
+        }
+
+        function zhh_animA() {
+            zhh_ctxA.clearRect(0, 0, zhh_cvA.width, zhh_cvA.height);
+            for (var i = 0; i < zhh_parts.length; i++) {
+                var p = zhh_parts[i];
+                // 向目标位置缓动
+                p.x += (p.tx - p.x) * 0.06;
+                p.y += (p.ty - p.y) * 0.06;
+                // 鼠标排斥
+                var dx = p.x - zhh_mouseA.x;
+                var dy = p.y - zhh_mouseA.y;
+                var d2 = dx * dx + dy * dy;
+                if (d2 < 70 * 70) {
+                    var d = Math.sqrt(d2) || 1;
+                    var f = (70 - d) / 70 * 6;
+                    p.x += (dx / d) * f;
+                    p.y += (dy / d) * f;
+                }
+                zhh_ctxA.beginPath();
+                zhh_ctxA.fillStyle = "hsl(" + p.hue + ",80%,65%)";
+                zhh_ctxA.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                zhh_ctxA.fill();
+            }
+            requestAnimationFrame(zhh_animA);
+        }
+
+        zhh_cvA.addEventListener("mousemove", function (e) {
+            var zhh_rect = zhh_cvA.getBoundingClientRect();
+            zhh_mouseA.x = (e.clientX - zhh_rect.left) * (zhh_cvA.width / zhh_rect.width);
+            zhh_mouseA.y = (e.clientY - zhh_rect.top) * (zhh_cvA.height / zhh_rect.height);
+        });
+        zhh_cvA.addEventListener("mouseleave", function () {
+            zhh_mouseA.x = -9999; zhh_mouseA.y = -9999;
+        });
+
+        function zhh_explode() {
+            for (var i = 0; i < zhh_parts.length; i++) {
+                zhh_parts[i].x = Math.random() * zhh_cvA.width;
+                zhh_parts[i].y = Math.random() * zhh_cvA.height;
+            }
+        }
+        function zhh_gather() { zhh_mouseA.x = -9999; zhh_mouseA.y = -9999; }
+
+        zhh_buildParticles();
+        zhh_animA();
+
+        /* ===== 动画二：渐变脉冲文字 ===== */
+        var zhh_cvB = document.getElementById("zhh_cvB");
+        var zhh_ctxB = zhh_cvB.getContext("2d");
+        var zhh_tB = 0;
+        function zhh_animB() {
+            zhh_tB += 0.02;
+            zhh_ctxB.clearRect(0, 0, zhh_cvB.width, zhh_cvB.height);
+            zhh_ctxB.save();
+            zhh_ctxB.translate(zhh_cvB.width / 2, zhh_cvB.height / 2);
+            var s = 1 + Math.sin(zhh_tB) * 0.06;
+            zhh_ctxB.scale(s, s);
+            var zhh_grad = zhh_ctxB.createLinearGradient(-220, 0, 220, 0);
+            var h = (zhh_tB * 40) % 360;
+            zhh_grad.addColorStop(0, "hsl(" + h + ",85%,62%)");
+            zhh_grad.addColorStop(0.5, "hsl(" + (h + 60) + ",85%,62%)");
+            zhh_grad.addColorStop(1, "hsl(" + (h + 120) + ",85%,62%)");
+            zhh_ctxB.fillStyle = zhh_grad;
+            zhh_ctxB.strokeStyle = "rgba(255,255,255,.5)";
+            zhh_ctxB.lineWidth = 2;
+            zhh_ctxB.font = "bold 96px 'Microsoft YaHei'";
+            zhh_ctxB.textAlign = "center";
+            zhh_ctxB.textBaseline = "middle";
+            zhh_ctxB.fillText("张淮皓", 0, 0);
+            zhh_ctxB.strokeText("张淮皓", 0, 0);
+            zhh_ctxB.restore();
+            requestAnimationFrame(zhh_animB);
+        }
+        zhh_animB();
+
+        /* ===== 动画三：文字雨 ===== */
+        var zhh_cvC = document.getElementById("zhh_cvC");
+        var zhh_ctxC = zhh_cvC.getContext("2d");
+        var zhh_chars = ["张", "淮", "皓"];
+        var zhh_fontSize = 20;
+        var zhh_colsC = Math.floor(zhh_cvC.width / zhh_fontSize);
+        var zhh_drops = [];
+        for (var i = 0; i < zhh_colsC; i++) zhh_drops[i] = Math.random() * -zhh_cvC.height;
+
+        function zhh_animC() {
+            // 半透明黑覆盖产生拖尾
+            zhh_ctxC.fillStyle = "rgba(15,23,42,0.18)";
+            zhh_ctxC.fillRect(0, 0, zhh_cvC.width, zhh_cvC.height);
+            zhh_ctxC.font = zhh_fontSize + "px 'Microsoft YaHei'";
+            zhh_ctxC.textAlign = "center";
+            for (var i = 0; i < zhh_colsC; i++) {
+                var ch = zhh_chars[Math.floor(Math.random() * zhh_chars.length)];
+                var x = i * zhh_fontSize + zhh_fontSize / 2;
+                var y = zhh_drops[i];
+                zhh_ctxC.fillStyle = "hsl(" + (140 + Math.random() * 80) + ",80%,65%)";
+                zhh_ctxC.fillText(ch, x, y);
+                zhh_drops[i] += zhh_fontSize;
+                if (zhh_drops[i] > zhh_cvC.height && Math.random() > 0.97) {
+                    zhh_drops[i] = Math.random() * -60;
+                }
+            }
+            requestAnimationFrame(zhh_animC);
+        }
+        zhh_animC();
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid 智能客服系统 · 流程图与 ER 图</title>
+    <script src="cdn/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1200px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            margin-bottom: 18px;
+            border-top: 4px solid #6366f1;
+        }
+        .zhh_c_er { border-top-color: #10b981; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            background: #6366f1;
+        }
+        .zhh_tag_er { background: #10b981; }
+        .zhh_card h2 { font-size: 17px; margin-bottom: 4px; }
+        .zhh_card p.zhh_tip { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+
+        .zhh_mermaid_box {
+            width: 100%;
+            overflow-x: auto;
+            background: #fafbfc;
+            border-radius: 10px;
+            border: 1px solid #f0f0f0;
+            padding: 20px;
+            text-align: center;
+        }
+        .zhh_mermaid_box .mermaid {
+            display: inline-block;
+            min-width: 100%;
+        }
+
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            margin-top: 14px;
+        }
+        .zhh_code b { color: #6366f1; }
+        .zhh_code i { color: #10b981; font-style: normal; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-05，使用的大模型：GLM-5.3-Flash，功能名称：Mermaid 绘制智能客服系统流程图与 ER 图 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>Mermaid 智能客服系统架构</h1>
+            <p>张淮皓的JavaScript · 使用本地 mermaid.min.js 绘制流程图与 ER 图</p>
+        </div>
+
+        <!-- 流程图 -->
+        <div class="zhh_card">
+            <span class="zhh_tag">流程图 Flowchart</span>
+            <h2>智能客服系统业务流程图</h2>
+            <p class="zhh_tip">用户提问 → 意图识别 → 知识库检索 / 知识图谱推理 → 大模型生成 → 置信度判断 → 返回或转人工 → 反馈闭环</p>
+            <div class="zhh_mermaid_box">
+                <div class="mermaid">
+flowchart TD
+    A(["用户提问"]) --> B{"意图识别 NLU"}
+    B -->|"闲聊/问候"| C["大模型直接回复"]
+    B -->|"业务咨询"| D["知识库向量检索"]
+    B -->|"投诉/转人工"| K["转人工坐席"]
+    D --> E{"检索命中?"}
+    E -->|"命中"| F["RAG 检索增强生成"]
+    E -->|"未命中"| G["知识图谱多跳推理"]
+    F --> H["大模型生成回答"]
+    G --> H
+    H --> I{"置信度 ≥ 阈值?"}
+    I -->|"是"| J(["返回用户"])
+    I -->|"否"| K
+    C --> J
+    K --> L["人工客服处理"]
+    L --> M["创建工单记录"]
+    J --> N["用户反馈评分"]
+    N --> O["反馈标注入库"]
+    O --> P["模型迭代优化"]
+    P -.->|"闭环"| D
+                </div>
+            </div>
+            <div class="zhh_code"><b>flowchart TD</b> 自上而下布局
+<i>{ }</i> 菱形判断节点　<i>[ ]</i> 矩形处理节点　<i>(( ))</i> 圆形起止节点
+<b>-.-></b> 虚线表示反馈闭环回流到知识库检索</div>
+        </div>
+
+        <!-- ER 图 -->
+        <div class="zhh_card zhh_c_er">
+            <span class="zhh_tag zhh_tag_er">ER 图 Entity-Relationship</span>
+            <h2>智能客服系统数据库 ER 图</h2>
+            <p class="zhh_tip">7 个实体：用户、会话、问题、回答、知识库、反馈、工单、坐席，展示主键 PK / 外键 FK 与一对多 / 多对多关系</p>
+            <div class="zhh_mermaid_box">
+                <div class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ QUESTION : "包含"
+    QUESTION ||--|| ANSWER : "生成"
+    ANSWER }o--o| KNOWLEDGE_BASE : "引用"
+    ANSWER ||--o{ FEEDBACK : "收到"
+    SESSION }o--o| TICKET : "转交"
+    TICKET }o--|| AGENT : "分配"
+
+    USER {
+        int id PK
+        string name
+        string phone
+        string email
+        datetime register_time
+    }
+    SESSION {
+        int id PK
+        int user_id FK
+        datetime start_time
+        string status
+    }
+    QUESTION {
+        int id PK
+        int session_id FK
+        text content
+        string intent
+        datetime create_time
+    }
+    ANSWER {
+        int id PK
+        int question_id FK
+        text content
+        string source
+        float confidence
+        datetime create_time
+    }
+    KNOWLEDGE_BASE {
+        int id PK
+        string title
+        text content
+        string category
+        string embedding
+    }
+    FEEDBACK {
+        int id PK
+        int answer_id FK
+        int rating
+        text comment
+        datetime create_time
+    }
+    TICKET {
+        int id PK
+        int session_id FK
+        int agent_id FK
+        string status
+        string priority
+    }
+    AGENT {
+        int id PK
+        string name
+        string role
+        string status
+    }
+                </div>
+            </div>
+            <div class="zhh_code"><b>||--o{</b> 一对多　<b>}o--o|</b> 多对零或一　<b>}o--||</b> 多对一　<b>||--||</b> 一对一
+<b>PK</b> 主键 Primary Key　<b>FK</b> 外键 Foreign Key
+实体大写命名，属性格式：类型 名称 键标记</div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            er: {
+                useMaxWidth: true,
+                minEntityWidth: 80,
+                minEntityHeight: 60
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts 基础折线图与平滑折线图</title>
+    <script src="cdn/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+        .zhh_wrap { max-width: 1100px; margin: 0 auto; }
+        .zhh_header { text-align: center; margin-bottom: 28px; }
+        .zhh_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .zhh_header p { color: #6b7280; margin-top: 8px; font-size: 14px; }
+
+        .zhh_grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 760px) { .zhh_grid { grid-template-columns: 1fr; } }
+
+        .zhh_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, .08);
+            border-top: 4px solid #6366f1;
+        }
+        .zhh_c_smooth { border-top-color: #10b981; }
+        .zhh_tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            background: #6366f1;
+        }
+        .zhh_tag_smooth { background: #10b981; }
+        .zhh_card h2 { font-size: 16px; margin-bottom: 4px; }
+        .zhh_card p.zhh_tip { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+
+        .zhh_chart {
+            width: 100%;
+            height: 360px;
+        }
+
+        .zhh_code {
+            font-family: Consolas, monospace;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 11px;
+            color: #374151;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            margin-top: 12px;
+        }
+        .zhh_code b { color: #6366f1; }
+        .zhh_code i { color: #10b981; font-style: normal; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张淮皓，建立时间：2026-11-05，使用的大模型：GLM-5.3-Flash，功能名称：ECharts 基础折线图与平滑折线图 -->
+    <div class="zhh_wrap">
+        <div class="zhh_header">
+            <h1>ECharts 折线图演示</h1>
+            <p>张淮皓的JavaScript · 基础折线图 vs 平滑折线图，使用本地 echarts.min.js</p>
+        </div>
+
+        <div class="zhh_grid">
+            <!-- 图表一：基础折线图 -->
+            <div class="zhh_card">
+                <span class="zhh_tag">基础折线图</span>
+                <h2>基础折线图（Line Chart）</h2>
+                <p class="zhh_tip">type: 'line'，折线为直线段连接，数据点用默认标记显示</p>
+                <div class="zhh_chart" id="zhh_basic"></div>
+                <div class="zhh_code"><b>series</b>: [{
+  data: [150, 230, 224, 218, 135, 147, 260],
+  <b>type</b>: 'line'    <i>// 直线段连接</i>
+}]</div>
+            </div>
+
+            <!-- 图表二：平滑折线图 -->
+            <div class="zhh_card zhh_c_smooth">
+                <span class="zhh_tag zhh_tag_smooth">平滑折线图</span>
+                <h2>基础平滑折线图（Smooth Line）</h2>
+                <p class="zhh_tip">smooth: true，折线变为贝塞尔曲线，视觉更柔和</p>
+                <div class="zhh_chart" id="zhh_smooth"></div>
+                <div class="zhh_code"><b>series</b>: [{
+  data: [820, 932, 901, 934, 1290, 1330, 1320],
+  <b>type</b>: 'line',
+  <i>smooth</i>: true    <i>// 曲线平滑</i>
+}]</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 图表一：基础折线图 ===== */
+        var zhh_chartBasic = echarts.init(document.getElementById('zhh_basic'));
+        zhh_chartBasic.setOption({
+            title: {
+                text: '基础折线图',
+                left: 'center',
+                textStyle: { fontSize: 15, color: '#374151' }
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                right: 10,
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '8%',
+                right: '8%',
+                bottom: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisLabel: { fontSize: 13 }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: { fontSize: 13 }
+            },
+            series: [
+                {
+                    data: [150, 230, 224, 218, 135, 147, 260],
+                    type: 'line',
+                    itemStyle: { color: '#6366f1' },
+                    lineStyle: { width: 3 }
+                }
+            ]
+        });
+
+        /* ===== 图表二：平滑折线图 ===== */
+        var zhh_chartSmooth = echarts.init(document.getElementById('zhh_smooth'));
+        zhh_chartSmooth.setOption({
+            title: {
+                text: '平滑折线图',
+                left: 'center',
+                textStyle: { fontSize: 15, color: '#374151' }
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                right: 10,
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '8%',
+                right: '8%',
+                bottom: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisLabel: { fontSize: 13 }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: { fontSize: 13 }
+            },
+            series: [
+                {
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { color: '#10b981' },
+                    lineStyle: { width: 3 },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(16,185,129,0.25)' },
+                                { offset: 1, color: 'rgba(16,185,129,0.02)' }
+                            ]
+                        }
+                    }
+                }
+            ]
+        });
+
+        /* 响应窗口缩放 */
+        window.addEventListener('resize', function () {
+            zhh_chartBasic.resize();
+            zhh_chartSmooth.resize();
+        });
+    </script>
+</body>
+</html>
